@@ -12,7 +12,7 @@ void setScene(){
     dun[0][i]='-';
     dun[26][i]='-';
   }
-  for(i=0; i<27; i++){
+  for(i=1; i<26; i++){
     dun[i][0]='|';
     dun[i][79]='|';
   }

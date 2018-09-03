@@ -1,4 +1,4 @@
-Makeall: main
+Makeall: main clean
 
 main: main.o dungeongen.o
 	gcc dungeongen.o main.o -o main
@@ -9,4 +9,4 @@ dungeongen.o: dungeongen.c
 main.o: main.c
 	gcc -c main.c -Wall -Werror -ggdb -o main.o
 clean:
-	rm -f *.o main dungeongen *~
+	rm -f *.o dungeongen *~

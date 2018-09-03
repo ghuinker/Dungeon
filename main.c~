@@ -1,7 +1,0 @@
-#include <stdio.h>
-#include "dungeon.h"
-
-int main(){
-  printf("Hellow World");
-  return 0;
-}
