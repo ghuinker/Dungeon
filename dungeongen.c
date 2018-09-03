@@ -27,7 +27,6 @@ void printDun(){
   }
   printf("\n");
 }
-
 void createDungeon(int diff){
   setScene();
   printDun();
