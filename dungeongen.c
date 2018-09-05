@@ -41,13 +41,13 @@ void printDun(){
 
 int checkRoom(int x, int y, int width, int height){
   int i, j;
-  if(x+width>=26 || x<2)
+  if(x+width>=79 || x<2)
     return 0;
-  if(y+height>=79 || y<2)
+  if(y+height>=26 || y<2)
     return 0;
 
-  for(i=x; i<x+width; i++)
-    for(j=y; j<y+height; j++)
+  for(i=x-1; i<x+width+1; i++)
+    for(j=y-1; j<y+height+1; j++)
       if(dun[i][j] == '.')
 	return 0;
   return 1;
@@ -55,7 +55,6 @@ int checkRoom(int x, int y, int width, int height){
 
 int createRoom(int x, int y, int width, int height){
   if(!checkRoom(x, y, width, height)){
-    printf("Not Valid");
     return 0;
 
   }
@@ -69,17 +68,28 @@ int createRoom(int x, int y, int width, int height){
 
 struct room getRanRoom(){
   struct room room;
-  room.x = rand() % (24 + 1 - 2) + 2;
-  room.y = rand() % (77 + 1 - 2) + 2;
+  room.x = rand() % (77 + 1 - 2) + 2;
+  room.y = rand() % (24 + 1 - 2) + 2;
   room.width = rand() % (20 + 1 - 3) + 3;
   room.height = rand() % (20 + 1 -2) + 2;
-  printf("%d, %d, %d, %d\n", room.x, room.y, room.width, room.height);
   return room;
 }
 
 void initRooms(){
-  struct room room = getRanRoom();
-  createRoom(room.x, room.y, room.width, room.height);
+  int  tries;
+  int count = 0;
+  while(count<5 || tries<100){
+    if(count>=10)
+      break;
+    struct room room = getRanRoom();
+
+    if(createRoom(room.x, room.y, room.width, room.height))
+      rooms[count++] = room;
+    tries++;
+  }
+  printf("%d\n", tries);
+
+  
   
 }
 
@@ -88,7 +98,7 @@ void initRooms(){
 void createDungeon(int diff){
   srand(time(NULL));
   setScene();
-  //initRooms();
+  initRooms();
   printDun();
 }
 
