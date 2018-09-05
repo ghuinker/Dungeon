@@ -31,12 +31,11 @@ void setScene(){
 
 void printDun(){
   int i, j;
-  for(i=0; i<27; i++){
-    for(j=0; j<80; j++)
-      printf("%c", dun[j][i]);
-    printf("\n");    
+  for(i=0; i<80; i++){
+    for(j=0; j<27; j++){
+      printf("%c", dun[i][j]);    
+    }
   }
-  printf("\n");
 }
 
 int checkRoom(int x, int y, int width, int height){
@@ -88,7 +87,7 @@ void initRooms(){
 void createDungeon(int diff){
   srand(time(NULL));
   setScene();
-  //initRooms();
+  initRooms();
   printDun();
 }
 
