@@ -74,6 +74,7 @@ struct room getRanRoom(){
   room.y = rand() % (24 + 1 - 2) + 2;
   room.width = rand() % (20 + 1 - 3) + 3;
   room.height = rand() % (20 + 1 -2) + 2;
+  room.connection = -1;
   return room;
 }
 
@@ -86,18 +87,23 @@ int mid(int point, int length){
 }
 
 int distance(struct room rm1, struct room rm2){
-
+  int cx1 = mid(rm1.x, rm1.width);
+  int cy1= mid(rm1.y, rm1.height);
+  int cx2 = mid(rm2.x, rm2.width);
+  int cy2 = mid(rm2.y, rm2.height);
+  return dis(cx1, cy1, cx2, cy2);
 }
 
 int connect(int roomIndex, int len){
   int i, minDis, minRoom;
+  minDis = 1000;
   struct room room = rooms[roomIndex];
   for(i=0; i<len; i++){
     struct room tmp = rooms[i];
     int dist;
-    if(i==roomIndex)
+    if(i==roomIndex || roomIndex==rooms[i].connection)
       continue;
-    if((dist = distance(room, tmp))>minDis){
+    if((dist = distance(room, tmp))<minDis){
       minDis = dist;
       minRoom = i;
     }
@@ -122,8 +128,10 @@ void initRooms(){
       break;
     struct room room = getRanRoom();
 
-    if(createRoom(room.x, room.y, room.width, room.height))
+    if(createRoom(room.x, room.y, room.width, room.height)){
       rooms[count++] = room;
+      dun[room.x][room.y] = count-1 +'0';
+    }
     tries++;
   }
   
