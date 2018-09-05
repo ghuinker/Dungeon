@@ -162,17 +162,21 @@ int createPath(struct room rm1, struct room rm2){
   pts = pathPoints(rm1, rm2);
   int i, j;
   for(i=pts[0]; i<pts[2]; i++){
-    dun[i][pts[1]] = '#';
-    if(pts[1] < pts[3])
-      pts[1]++;
-    if(pts[1] > pts[3])
-      pts[1]--;
+    if(dun[i][pts[1]] == ' '){
+      dun[i][pts[1]] = '#';
+      if(pts[1] < pts[3])
+	pts[1]++;
+      if(pts[1] > pts[3]) 
+	pts[1]--;
+    }
   }
   if(pts[1] != pts[3]){
     for(j=pts[1]; j<pts[3]; j++)
-      dun[i][j] = '#';
+      if(dun[i][j] == ' ')
+	dun[i][j] = '#';
     for(j=pts[1]; j>pts[3]; j--)
-      dun[i][j] = '#';
+      if(dun[i][j]== ' ')
+	dun[i][j] = '#';
   }
   return 0;
 }
