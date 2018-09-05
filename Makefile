@@ -1,7 +1,7 @@
 Makeall: main clean
 
 main: main.o dungeongen.o
-	gcc dungeongen.o main.o -o main
+	gcc dungeongen.o main.o -lm -o main
 
 dungeongen.o: dungeongen.c
 	gcc -c dungeongen.c -Wall -Werror -ggdb -o dungeongen.o

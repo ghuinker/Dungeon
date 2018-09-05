@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #include "dungeon.h"
 
@@ -9,6 +10,7 @@ struct room{
   int y;
   int width;
   int height;
+  int connection;
 };
 
 char dun[80][27];
@@ -75,6 +77,43 @@ struct room getRanRoom(){
   return room;
 }
 
+int dis(int x1, int y1, int x2, int y2){
+  return (int) sqrt((pow((x2-x1), 2)+(pow((y2-y1), 2))));
+}
+
+int mid(int point, int length){
+  return abs(point + (length/2));
+}
+
+int distance(struct room rm1, struct room rm2){
+
+}
+
+int connect(int roomIndex, int len){
+  int i, minDis, minRoom;
+  struct room room = rooms[roomIndex];
+  for(i=0; i<len; i++){
+    struct room tmp = rooms[i];
+    int dist;
+    if(i==roomIndex)
+      continue;
+    if((dist = distance(room, tmp))>minDis){
+      minDis = dist;
+      minRoom = i;
+    }
+  }
+  rooms[roomIndex].connection = minRoom;
+  return 0;
+}
+
+void initPaths(int len){
+  int i;
+  for(i=0; i<len; i++){
+    connect(i, len);
+    printf("%d:%d\n", i, rooms[i].connection);
+  }
+}
+
 void initRooms(){
   int  tries;
   int count = 0;
@@ -87,9 +126,8 @@ void initRooms(){
       rooms[count++] = room;
     tries++;
   }
-  printf("%d\n", tries);
-
   
+  initPaths(count);
   
 }
 
