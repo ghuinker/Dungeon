@@ -1,3 +1,7 @@
 Day 1: 9/2/18 20:00-22:20
 	Setting Up Architecture and Creating initial files
 	Setup scene and dungeongenerator files with headers and github
+Day 2: 9/5/18 09:00-14:
+	IMP Created rooms and paths
+	BUG paths are still not exactly where I want them and still cut through rooms but it is a start
+	BUG when rooms are close they do not create paths
