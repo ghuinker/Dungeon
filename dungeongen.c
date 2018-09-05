@@ -120,7 +120,7 @@ int joinRoom(struct room rm1, struct room rm2){
   if(rm1.y + rm1.height < rm2.y)
     starty += rm1.height;
   if(rm2.y<rm1.y){
-    starty = rm2.y;
+    starty = rm2.y-1;
     endy = rm1.y;
     if(rm2.y + rm2.height<rm1.y)
       starty += rm2.height;
@@ -129,9 +129,9 @@ int joinRoom(struct room rm1, struct room rm2){
   if(rm1.x +rm1.width<rm2.x)
     startx += rm1.width;
   for(j=startx; j<rm2.x; j++){
-    if(starty<endy)
+    if(starty<endy+1)
       starty++;
-    if(starty>endy)
+    if(starty>endy-1)
       starty--;
     dun[j][starty] = '#';
   }
