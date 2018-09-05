@@ -106,25 +106,28 @@ int * pathPoints(struct room rm1, struct room rm2){
     starty = rm1.y;
     endx = rm2.x;
     endy = rm2.y;
-    if(rm1.x + rm1.width < rm2.x)
+    if(rm1.x + rm1.width < rm2.x){
       startx += rm1.width;
+      starty++;
+    }
+    if(rm1.y + rm1.height <=rm2.y)
+      starty += rm1.height;
   }
 
   if(rm2.x< rm1.x){
     startx = rm2.x;
     starty = rm2.y;
-    endx = rm1.x-1;
-    endy = rm1.y-1;
-    if(rm2.x + rm2.width < rm1.x)
+    endx = rm1.x;
+    endy = rm1.y;
+    if(rm2.x + rm2.width < rm1.x){
       startx += rm2.width;
+      starty++;
+    }
+    if(rm2.y + rm2.height <= rm1.height)
+      starty += rm2.height;
   }
 
   
-  if(rm1.y + rm1.height < rm2.y)
-    endy+= rm1.height;
- 
-  if(rm2.y + rm2.height < rm1.y)
-    endy += rm2.height;
 
   pts[0] = startx;
   pts[1] = starty;
