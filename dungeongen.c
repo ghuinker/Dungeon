@@ -112,11 +112,52 @@ int connect(int roomIndex, int len){
   return 0;
 }
 
+
+int joinRoom(struct room rm1, struct room rm2){
+  int j, startx, starty, endy;
+  starty = rm1.y;
+  endy = rm2.y;
+  if(rm1.y + rm1.height < rm2.y)
+    starty += rm1.height;
+  if(rm2.y<rm1.y){
+    starty = rm2.y;
+    endy = rm1.y;
+    if(rm2.y + rm2.height<rm1.y)
+      starty += rm2.height;
+  }
+  startx = rm1.x;
+  if(rm1.x +rm1.width<rm2.x)
+    startx += rm1.width;
+  for(j=startx; j<rm2.x; j++){
+    if(starty<endy)
+      starty++;
+    if(starty>endy)
+      starty--;
+    dun[j][starty] = '#';
+  }
+  for(starty=starty; starty<endy; starty++)
+    dun[j][starty] = '#';
+  return 0;
+}
+
+int createPath(struct room rm1, struct room rm2){ 
+  if(rm1.x<rm2.x){
+    joinRoom(rm1, rm2);
+  }
+  else if(rm1.x>rm2.x){
+    joinRoom(rm2, rm1);
+  }
+  return 0;
+}
+
 void initPaths(int len){
   int i;
   for(i=0; i<len; i++){
     connect(i, len);
     printf("%d:%d\n", i, rooms[i].connection);
+  }
+  for(i=0; i<len; i++){
+    createPath(rooms[i],rooms[rooms[i].connection]);
   }
 }
 
@@ -138,7 +179,6 @@ void initRooms(){
   initPaths(count);
   
 }
-
 
 
 void createDungeon(int diff){
