@@ -94,6 +94,50 @@ int distance(struct room rm1, struct room rm2){
   return dis(cx1, cy1, cx2, cy2);
 }
 
+int * pathPoints(struct room rm1, struct room rm2){
+  static int pts[4];  
+  int startx = rm1.x;
+  int starty = rm1.y;
+  int endx = rm2.x;
+  int endy = rm2.y;
+  
+  if(rm1.x < rm2.x){
+    startx = rm1.x;
+    starty = rm1.y;
+    endx = rm2.x;
+    endy = rm2.y;
+    if(rm1.x + rm1.width < rm2.x){
+      startx += rm1.width;
+      starty++;
+    }
+    if(rm1.y + rm1.height <=rm2.y)
+      starty += rm1.height;
+  }
+
+  if(rm2.x< rm1.x){
+    startx = rm2.x;
+    starty = rm2.y;
+    endx = rm1.x;
+    endy = rm1.y;
+    if(rm2.x + rm2.width < rm1.x){
+      startx += rm2.width;
+      starty++;
+    }
+    if(rm2.y + rm2.height <= rm1.height)
+      starty += rm2.height;
+  }
+
+  
+
+  pts[0] = startx;
+  pts[1] = starty;
+  pts[2] = endx;
+  pts[3] = endy;
+
+
+  return pts;
+}
+
 int connect(int roomIndex, int len){
   int i, minDis, minRoom;
   minDis = 1000;
@@ -113,39 +157,26 @@ int connect(int roomIndex, int len){
 }
 
 
-int joinRoom(struct room rm1, struct room rm2){
-  int j, startx, starty, endy;
-  starty = rm1.y;
-  endy = rm2.y;
-  if(rm1.y + rm1.height < rm2.y)
-    starty += rm1.height;
-  if(rm2.y<rm1.y){
-    starty = rm2.y-1;
-    endy = rm1.y;
-    if(rm2.y + rm2.height<rm1.y)
-      starty += rm2.height;
-  }
-  startx = rm1.x;
-  if(rm1.x +rm1.width<rm2.x)
-    startx += rm1.width;
-  for(j=startx; j<rm2.x; j++){
-    if(starty<endy+1)
-      starty++;
-    if(starty>endy-1)
-      starty--;
-    dun[j][starty] = '#';
-  }
-  for(starty=starty; starty<endy; starty++)
-    dun[j][starty] = '#';
-  return 0;
-}
-
 int createPath(struct room rm1, struct room rm2){ 
-  if(rm1.x<rm2.x){
-    joinRoom(rm1, rm2);
+  int *pts;
+  pts = pathPoints(rm1, rm2);
+  int i, j;
+  for(i=pts[0]; i<pts[2]; i++){
+    if(dun[i][pts[1]] == ' '){
+      dun[i][pts[1]] = '#';
+      if(pts[1] < pts[3])
+	pts[1]++;
+      if(pts[1] > pts[3]) 
+	pts[1]--;
+    }
   }
-  else if(rm1.x>rm2.x){
-    joinRoom(rm2, rm1);
+  if(pts[1] != pts[3]){
+    for(j=pts[1]; j<pts[3]; j++)
+      if(dun[i][j] == ' ')
+	dun[i][j] = '#';
+    for(j=pts[1]; j>pts[3]; j--)
+      if(dun[i][j]== ' ')
+	dun[i][j] = '#';
   }
   return 0;
 }
