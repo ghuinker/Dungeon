@@ -690,7 +690,7 @@ int main(int argc, char *argv[])
   dungeon_t d;
   struct timeval tv;
   uint32_t seed;
-  //0: generate new 1: Generate new and save 2: Load 3: Load and Save
+  //0: none 1: save 2:load 3:load then save
   
   readIn(argc, argv);
 
