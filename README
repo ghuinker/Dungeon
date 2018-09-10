@@ -1,0 +1,2 @@
+All Code was written in C, with rooms consisting of sizes greater than 3x2. There will be at least 5 rooms per Dungeon. Rooms 
+are drawn with '.' and paths are drawn with '#'. All rooms are connected to other rooms. 
