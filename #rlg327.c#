@@ -60,25 +60,7 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_floor_hall,
 } terrain_type_t;
 
-typedef struct room {
-  pair_t position;
-  pair_t size;
-} room_t;
 
-typedef struct dungeon {
-  uint32_t num_rooms;
-  room_t rooms[MAX_ROOMS];
-  terrain_type_t map[DUNGEON_Y][DUNGEON_X];
-  /* Since hardness is usually not used, it would be expensive to pull it *
-   * into cache every time we need a map cell, so we store it in a        *
-   * parallel array, rather than using a structure to represent the       *
-   * cells.  We may want a cell structure later, but from a performanace  *
-   * perspective, it would be a bad idea to ever have the map be part of  *
-   * that structure.  Pathfinding will require efficient use of the map,  *
-   * and pulling in unnecessary data with each map cell would add a lot   *
-   * of overhead to the memory system.                                    */
-  uint8_t hardness[DUNGEON_Y][DUNGEON_X];
-} dungeon_t;
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
 {
@@ -691,28 +673,40 @@ int main(int argc, char *argv[])
   struct timeval tv;
   uint32_t seed;
   //0: generate new 1: Generate new and save 2: Load 3: Load and Save
-  
-  int activity = readIn(argc, argv);
-  if(activity >= 0)
-    readDungeon(&d);
+  int action = readIn(argc, argv);
+  if(action == -1)
+    return -1;
 
-  UNUSED(in_room);
+  if(action <2){
+    UNUSED(in_room);
 
-  if (argc == 2) {
-    seed = atoi(argv[1]);
-  } else {
-    gettimeofday(&tv, NULL);
-    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    if (argc == 2) {
+      seed = atoi(argv[1]);
+    } else {
+      gettimeofday(&tv, NULL);
+      seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    }
+
+    printf("Using seed: %u\n", seed);
+    srand(seed);
+
+    init_dungeon(&d);
+    gen_dungeon(&d);
+    render_dungeon(&d);
+    delete_dungeon(&d);
   }
 
-  printf("Using seed: %u\n", seed);
-  srand(seed);
-
-  init_dungeon(&d);
-  gen_dungeon(&d);
-  render_dungeon(&d);
-  delete_dungeon(&d);
-
+  if(action == 1)
+    saveDungeon(&d);
+  if(action ==2){
+    loadDungeon(&d);
+    render_dungeon(d);
+  }
+  if(action == 3){
+    loadDungeon(&d);
+    render_dungeon(&d);
+    saveDungeon(&d);
+  }
 
   return 0;
 }

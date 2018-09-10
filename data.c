@@ -4,6 +4,11 @@
 
 #include "data.h"
 
+
+void readDungeon(dungeon_t *d){
+  printf("Read Dungeon");
+}
+
 int returnAction(char*argv[]){
   if(strlen(*argv) == (size_t)5){
     if(!strcmp(*argv, "-save"))

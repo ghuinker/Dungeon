@@ -9,6 +9,7 @@ extern "C" {
 # include <stdint.h>
 
 int readIn(int argc, char *argv[]);
+  void readDungeon(dungeon_t *d);
 
 # ifdef __cplusplus
 }
