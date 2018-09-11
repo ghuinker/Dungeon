@@ -4,16 +4,25 @@
 
 #include "data.h"
 
+FILE *f;
 
-void readDungeon(dungeon_t *d){
-  printf("Read Dungeon");
+
+void loadDungeon(dungeon_t *d){
+  printf("load");
+}
+void saveDungeon(dungeon_t *d){
+  char loc[20];
+  strcpy(str, getenv("HOME"));
+  strcat(str, ".rlg327/");
+
+  printf("%s\n", loc);
 }
 
 int returnAction(char*argv[]){
-  if(strlen(*argv) == (size_t)5){
-    if(!strcmp(*argv, "-save"))
+  if(strlen(*argv) == (size_t)6){
+    if(!strcmp(*argv, "--save"))
        return 1;
-       else if(!strcmp(*argv, "-load"))
+       else if(!strcmp(*argv, "--load"))
 	 return 2;
   }
   return -1;
@@ -48,10 +57,8 @@ int readIn(int argc, char*argv[]){
     }
 
   printf("Action: %d\n", action);
+  return action;
 
-
-  
-  return 1;
 }
 
 

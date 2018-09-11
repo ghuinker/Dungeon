@@ -660,25 +660,38 @@ int main(int argc, char *argv[])
   //0: generate new 1: Generate new and save 2: Load 3: Load and Save
   
   int activity = readIn(argc, argv);
-  if(activity >= 0)
-    readDungeon(&d);
+  if(activity == -1)
+    return -1;
 
-  UNUSED(in_room);
+  if(activity<2){
+    UNUSED(in_room);
 
-  if (argc == 2) {
-    seed = atoi(argv[1]);
-  } else {
-    gettimeofday(&tv, NULL);
-    seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    
+      gettimeofday(&tv, NULL);
+      seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
+    
+
+    printf("Using seed: %u\n", seed);
+    srand(seed);
+
+    init_dungeon(&d);
+    gen_dungeon(&d);
+    render_dungeon(&d);
+    delete_dungeon(&d);
   }
 
-  printf("Using seed: %u\n", seed);
-  srand(seed);
-
-  init_dungeon(&d);
-  gen_dungeon(&d);
-  render_dungeon(&d);
-  delete_dungeon(&d);
+  if(activity == 1){
+    saveDungeon(&d);
+  }
+  if(activity ==2){
+    loadDungeon(&d);
+    render_dungeon(&d);
+  }
+  if(activity ==3){
+    loadDungeon(&d);
+    render_dungeon(&d);
+    saveDungeon(&d);
+  }
 
 
   return 0;
