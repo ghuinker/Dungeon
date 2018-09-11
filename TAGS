@@ -1,10 +1,18 @@
 
-data.c,109
+data.c,304
 FILE *f;f7,79
-void loadDungeon(11,91
-void saveDungeon(24,343
-int returnAction(38,601
-int readIn(49,790
+  char *type;type10,98
+  uint32_t marker;11,112
+  uint32_t size;12,131
+  uint8_t x;13,148
+  uint8_t y;14,161
+  char *dungeon[dungeon15,174
+  uint8_t rooms[rooms16,213
+} savt_t;18,233
+void loadDungeon(22,246
+void saveDungeon(35,498
+int returnAction(49,756
+int readIn(60,945
 
 data.h,1033
 # define DATA_H2,15

@@ -6,6 +6,18 @@
 
 FILE *f;
 
+typedef struct {
+  char *type;
+  uint32_t marker;
+  uint32_t size;
+  uint8_t x;
+  uint8_t y;
+  char *dungeon[DUNGEON_Y][DUNGEON_X];
+  uint8_t rooms[];
+
+} save_t;
+
+
 
 
 void loadDungeon(dungeon_t *d){
@@ -16,7 +28,17 @@ void loadDungeon(dungeon_t *d){
   f = fopen(loc, "r");
   if(f == NULL)
     printf("f is null");
-  fread(d, sizeof(dungeon_t), 1, f);
+
+  save_t s;
+  fread(s, sizeof(save_t), 1, f);
+  
+  int i, j;
+  for(i=0; i<DUNGEON_Y; i++){
+    for(j=0; j<DUNGEON_X; j++)
+      printf("%s", s.dungeon[i][j]);
+    printf("\n");
+  }
+
   fclose(f);
 
 }
@@ -29,8 +51,8 @@ void saveDungeon(dungeon_t *d){
   f = fopen(loc, "w");
   if(f == NULL)
     printf("f is null");
-  
-  fwrite(d, sizeof(dungeon_t), 1, f);
+  save_t s;
+  fwrite(s, sizeof(save_t), 1, f);
   
   fclose(f);
 }
