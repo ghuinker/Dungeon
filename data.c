@@ -7,15 +7,23 @@
 FILE *f;
 
 
+
 void loadDungeon(dungeon_t *d){
   printf("load");
 }
-void saveDungeon(dungeon_t *d){
-  char loc[20];
-  strcpy(str, getenv("HOME"));
-  strcat(str, ".rlg327/");
 
-  printf("%s\n", loc);
+void saveDungeon(dungeon_t *d){
+  char loc[80];
+  //strcpy(loc, getenv("HOME"));
+  strcpy(loc, "");
+  strcat(loc, ".rlg327/dungeon");
+  f = fopen(loc, "w");
+  if(f == NULL)
+    printf("f is null");
+  
+  fwrite(d, sizeof(dungeon_t), 1, f);
+  
+  fclose(f);
 }
 
 int returnAction(char*argv[]){

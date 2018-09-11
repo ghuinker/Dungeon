@@ -1,10 +1,11 @@
 
-data.c,108
+data.c,129
 FILE *f;f7,79
-void loadDungeon(9,89
-void saveDungeon(12,141
-int returnAction(19,232
-int readIn(30,421
+void getName(9,89
+void loadDungeon(15,204
+void saveDungeon(19,257
+int returnAction(32,450
+int readIn(43,639
 
 data.h,1033
 # define DATA_H2,15
