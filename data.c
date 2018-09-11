@@ -9,7 +9,16 @@ FILE *f;
 
 
 void loadDungeon(dungeon_t *d){
-  printf("load");
+  char loc[80];
+  //strcpy(loc, getenv("HOME"));
+  strcpy(loc, "");
+  strcat(loc, ".rlg327/dungeon");
+  f = fopen(loc, "r");
+  if(f == NULL)
+    printf("f is null");
+  fread(d, sizeof(dungeon_t), 1, f);
+  fclose(f);
+
 }
 
 void saveDungeon(dungeon_t *d){
