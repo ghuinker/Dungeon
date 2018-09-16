@@ -188,11 +188,12 @@ void render_open_paths(dungeon_t *d){
 
   for(y=0; y<DUNGEON_Y; y++)
     for(x=0; x<DUNGEON_X; x++)
-	if(in_room(d, y, x)){
-	  to[dim_y] = y;
-	  to[dim_x] = x;
-	  dijkstra_open(d, dist, to, from);
-      }
+	if(in_room(d, y, x))
+	  if(dist[y][x] == INT_MAX){
+	    to[dim_y] = y;
+	    to[dim_x] = x;
+	    dijkstra_open(d, dist, to, from);
+	  }
   
 
   

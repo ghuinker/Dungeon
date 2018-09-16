@@ -591,8 +591,6 @@ void render_dungeon(dungeon_t *d)
 {
   pair_t p;
 
-  printf("%d, %d\n", d->pc[dim_x], d->pc[dim_y]);
-
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if(p[dim_x] == d->pc[dim_x] && p[dim_y] == d->pc[dim_y])
@@ -1157,10 +1155,11 @@ int main(int argc, char *argv[])
   d.pc[dim_x] = d.rooms[0].position[dim_x];
   d.pc[dim_y] = d.rooms[0].position[dim_y];
 
-
-  render_open_paths(&d);
-  printf("\n\n");
   render_dungeon(&d);
+  printf("\n\n");
+  render_open_paths(&d);
+  
+  
   
   
   
