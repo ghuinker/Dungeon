@@ -70,13 +70,55 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
 	  //mapxy(x, y) = ter_debug;
           //hardnessxy(x, y) = 0;
 	  if(dist[y][x] >pos++)
-	    dist[y][x] = pos;
+	    dist[y][x] = pos-1;
         }
       }
       heap_delete(&h);
       return;
     }
+    //Diagonal
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x]  +1].hn) &&
+        (path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].cost >
+         p->cost + hardnesspair(p->pos))) {
+      path[p->pos[dim_y] - 1][p->pos[dim_x]  +1].cost =
+        p->cost + hardnesspair(p->pos);
+      path[p->pos[dim_y] - 1][p->pos[dim_x]+1  ].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
+                                           [p->pos[dim_x] +1 ].hn);
+    }
+    if ((path[p->pos[dim_y]  +1][p->pos[dim_x] - 1].hn) &&
+        (path[p->pos[dim_y] +1 ][p->pos[dim_x] - 1].cost >
+         p->cost + hardnesspair(p->pos))) {
+      path[p->pos[dim_y]  +1][p->pos[dim_x] - 1].cost =
+        p->cost + hardnesspair(p->pos);
+      path[p->pos[dim_y] +1 ][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] +1 ][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] +1 ]
+                                           [p->pos[dim_x] - 1].hn);
+    }
+    if ((path[p->pos[dim_y] -1 ][p->pos[dim_x] + 1].hn) &&
+        (path[p->pos[dim_y] -1 ][p->pos[dim_x] + 1].cost >
+         p->cost + hardnesspair(p->pos))) {
+      path[p->pos[dim_y] -1 ][p->pos[dim_x] + 1].cost =
+        p->cost + hardnesspair(p->pos);
+      path[p->pos[dim_y] -1 ][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] -1 ][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]    ]
+                                           [p->pos[dim_x] + 1].hn);
+    }
+    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].hn) &&
+        (path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].cost >
+         p->cost + hardnesspair(p->pos))) {
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].cost =
+        p->cost + hardnesspair(p->pos);
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
+                                           [p->pos[dim_x] -1 ].hn);
+    }
     
+    //Straight Lines
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost >
          p->cost + hardnesspair(p->pos))) {
