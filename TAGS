@@ -70,8 +70,8 @@ macros.h,611
 
 path.c,99
 static void dijkstra_open(19,247
-void render_all_paths(125,3991
-void render_open_paths(130,4069
+void render_all_paths(128,3899
+void render_open_paths(133,3977
 
 path.h,1413
 # define PATH_H2,15
@@ -150,17 +150,17 @@ static int place_rooms(532,16452
 static int make_rooms(569,17639
 int gen_dungeon(592,18200
 void render_dungeon(604,18343
-void delete_dungeon(637,19005
-void init_dungeon(642,19062
-int write_dungeon_map(647,19119
-int write_rooms(660,19348
-uint32_t calculate_dungeon_size(680,19767
-int makedirectory(687,20014
-int write_dungeon(722,20650
-int read_dungeon_map(785,22145
-int read_rooms(808,22743
-int calculate_num_rooms(862,24560
-int read_dungeon(870,24800
-int read_pgm(949,26684
-void usage(1034,29087
-int main(1044,29297
+void delete_dungeon(637,19007
+void init_dungeon(642,19064
+int write_dungeon_map(647,19121
+int write_rooms(660,19350
+uint32_t calculate_dungeon_size(680,19769
+int makedirectory(687,20016
+int write_dungeon(722,20652
+int read_dungeon_map(785,22147
+int read_rooms(808,22745
+int calculate_num_rooms(862,24562
+int read_dungeon(870,24802
+int read_pgm(949,26686
+void usage(1034,29089
+int main(1044,29299

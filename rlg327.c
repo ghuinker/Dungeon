@@ -626,7 +626,7 @@ void render_dungeon(dungeon_t *d)
 	  break;
 	case ter_debug:
 	  putchar('*');
-	  fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
+	  //fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
 	  break;
 	}
     }
@@ -1176,6 +1176,7 @@ int main(int argc, char *argv[])
   render_all_paths(&d);
   printf("\n\n\n");
   render_open_paths(&d);
+  render_dungeon(&d);
 
   if (do_save) {
     if (do_save_seed) {

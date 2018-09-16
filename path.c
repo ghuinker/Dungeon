@@ -23,7 +23,8 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
   heap_t h;
   uint32_t x, y;
 
-  char open_dun[DUNGEON_Y][DUNGEON_X];
+  int32_t open_dun[DUNGEON_Y][DUNGEON_X];
+
 
   if (!initialized) {
     for (y = 0; y < DUNGEON_Y; y++) {
@@ -39,7 +40,7 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
-      open_dun[y][x] = ' ';
+      open_dun[y][x] = INT_MAX;
     }
   }
 
@@ -49,7 +50,8 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
 
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
-      if (mapxy(x, y) == ter_floor) {
+     
+      if (mapxy(x, y) == ter_floor_room || mapxy(x,y) == ter_floor_hall ) {
         path[y][x].hn = heap_insert(&h, &path[y][x]);
       } else {
         path[y][x].hn = NULL;
@@ -65,9 +67,10 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
            (x != from[dim_x]) || (y != from[dim_y]);
            p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
 	//If this Location is something you want to check
-        if (mapxy(x, y) == ter_floor) {
-	  //If it is a floor
-          open_dun[y][x] = path[y][x].cost;
+
+        if (mapxy(x, y) == ter_floor_room || mapxy(x,y) == ter_floor_hall) {
+	  mapxy(x, y) = ter_debug;
+          hardnessxy(x, y) = 0;
         }
       }
       heap_delete(&h);
@@ -76,9 +79,9 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
 
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost >
-         p->cost + hardnesspair(p->pos))) {
+         p->cost )) {
       path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost =
-        p->cost + hardnesspair(p->pos);
+        p->cost ;
       path[p->pos[dim_y] - 1][p->pos[dim_x]    ].from[dim_y] = p->pos[dim_y];
       path[p->pos[dim_y] - 1][p->pos[dim_x]    ].from[dim_x] = p->pos[dim_x];
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
@@ -86,9 +89,9 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
     }
     if ((path[p->pos[dim_y]    ][p->pos[dim_x] - 1].hn) &&
         (path[p->pos[dim_y]    ][p->pos[dim_x] - 1].cost >
-         p->cost + hardnesspair(p->pos))) {
+         p->cost)) {
       path[p->pos[dim_y]    ][p->pos[dim_x] - 1].cost =
-        p->cost + hardnesspair(p->pos);
+        p->cost;
       path[p->pos[dim_y]    ][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
       path[p->pos[dim_y]    ][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y]    ]
@@ -96,9 +99,9 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
     }
     if ((path[p->pos[dim_y]    ][p->pos[dim_x] + 1].hn) &&
         (path[p->pos[dim_y]    ][p->pos[dim_x] + 1].cost >
-         p->cost + hardnesspair(p->pos))) {
+         p->cost )) {
       path[p->pos[dim_y]    ][p->pos[dim_x] + 1].cost =
-        p->cost + hardnesspair(p->pos);
+        p->cost ;
       path[p->pos[dim_y]    ][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
       path[p->pos[dim_y]    ][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y]    ]
@@ -106,9 +109,9 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
     }
     if ((path[p->pos[dim_y] + 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] + 1][p->pos[dim_x]    ].cost >
-         p->cost + hardnesspair(p->pos))) {
+         p->cost )) {
       path[p->pos[dim_y] + 1][p->pos[dim_x]    ].cost =
-        p->cost + hardnesspair(p->pos);
+        p->cost;
       path[p->pos[dim_y] + 1][p->pos[dim_x]    ].from[dim_y] = p->pos[dim_y];
       path[p->pos[dim_y] + 1][p->pos[dim_x]    ].from[dim_x] = p->pos[dim_x];
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
@@ -116,8 +119,8 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
     }
   }
   for(y=0; y<DUNGEON_Y; y++){
-    for(x=0; y<DUNGEON_X; x++)
-      printf("%c", open_dun[y][x]);
+    for(x=0; x<DUNGEON_X; x++)
+      printf("%d", open_dun[y][x]%10);
     printf("\n");
   }
 }
