@@ -67,8 +67,8 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
 	//If this Location is something you want to check
 
         if (mapxy(x, y) == ter_floor_room || mapxy(x,y) == ter_floor_hall) {
-	  mapxy(x, y) = ter_debug;
-          hardnessxy(x, y) = 0;
+	  //mapxy(x, y) = ter_debug;
+          //hardnessxy(x, y) = 0;
 	  if(dist[y][x] >pos++)
 	    dist[y][x] = pos;
         }
@@ -77,7 +77,7 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
       return;
     }
     
-if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost >
          p->cost + hardnesspair(p->pos))) {
       path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost =
@@ -149,10 +149,9 @@ void render_open_paths(dungeon_t *d){
 	if(in_room(d, y, x)){
 	  to[dim_y] = y;
 	  to[dim_x] = x;
-	  
-	  
+	  dijkstra_open(d, dist, to, from);
       }
-  dijkstra_open(d, dist, from, to);
+  
 
   
   for(y=0; y<DUNGEON_Y; y++){
