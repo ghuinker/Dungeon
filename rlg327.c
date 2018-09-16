@@ -12,6 +12,7 @@
 /* Very slow seed: 686846853 */
 
 #include "heap.h"
+#include "path.h"
 
 #define DUMP_HARDNESS_IMAGES 0
 
@@ -663,25 +664,30 @@ void render_dungeon(dungeon_t *d)
 {
   pair_t p;
 
+  printf("%d, %d\n", d->pc[dim_x], d->pc[dim_y]);
+
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      switch (mappair(p)) {
-      case ter_wall:
-      case ter_wall_immutable:
-        putchar(' ');
-        break;
-      case ter_floor:
-      case ter_floor_room:
-        putchar('.');
-        break;
-      case ter_floor_hall:
-        putchar('#');
-        break;
-      case ter_debug:
-        putchar('*');
-        fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
-        break;
-      }
+      if(p[dim_x] == d->pc[dim_x] && p[dim_y] == d->pc[dim_y])
+	putchar('@');
+      else
+	switch (mappair(p)) {
+	case ter_wall:
+	case ter_wall_immutable:
+	  putchar(' ');
+	  break;
+	case ter_floor:
+	case ter_floor_room:
+	  putchar('.');
+	  break;
+	case ter_floor_hall:
+	  putchar('#');
+	  break;
+	case ter_debug:
+	  putchar('*');
+	  fprintf(stderr, "Debug character at %d, %d\n", p[dim_y], p[dim_x]);
+	  break;
+	}
     }
     putchar('\n');
   }
