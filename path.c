@@ -38,7 +38,6 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
   for (y = 0; y < DUNGEON_Y; y++) {
     for (x = 0; x < DUNGEON_X; x++) {
       path[y][x].cost = INT_MAX;
-      dist[y][x] = INT_MAX;
     }
   }
 
@@ -67,10 +66,11 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
 	//If this Location is something you want to check
 
         if (mapxy(x, y) == ter_floor_room || mapxy(x,y) == ter_floor_hall) {
-	  mapxy(x, y) = ter_debug;
-          hardnessxy(x, y) = 0;
-	  dist[y][x] = pos++;
-	  printf("Cost: %d\n", pos -1);
+	  //mapxy(x, y) = ter_debug;
+          //hardnessxy(x, y) = 0;
+	  if(dist[y][x] == INT_MAX){
+	    dist[y][x] = pos++;
+	  }
         }
       }
       heap_delete(&h);
@@ -172,17 +172,32 @@ void render_all_paths(dungeon_t *d){
 
 void render_open_paths(dungeon_t *d){
   printf("Rendering Open Paths\n");
+
+  int y, x;
+
   pair_t from, to;
   from[dim_x] = d->pc[dim_x];
   from[dim_y] = d->pc[dim_y];
-  to[dim_y] = d->rooms[1].position[dim_y];
-  to[dim_x] = d->rooms[1].position[dim_x];
+ 
 
   uint32_t dist[DUNGEON_Y][DUNGEON_X];
+  for (y = 0; y < DUNGEON_Y; y++) {
+    for (x = 0; x < DUNGEON_X; x++) {
+      dist[y][x] = INT_MAX;
+    }
+  }
 
-  dijkstra_open(d, dist, from, to);
+  for(y=0; y<DUNGEON_Y; y++)
+    for(x=0; x<DUNGEON_X; x++)
+      if(dist[y][x] == INT_MAX){
+	to[dim_y] = y;
+	to[dim_x] = x;
 
-  int y, x;
+	dijkstra_open(d, dist, from, to);
+      }
+  
+
+  
   for(y=0; y<DUNGEON_Y; y++){
     for(x=0; x<DUNGEON_X; x++)
       if(dist[y][x] != INT_MAX)
