@@ -71,12 +71,56 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
         if (mapxy(x, y) == ter_floor_room || mapxy(x,y) == ter_floor_hall) {
 	  mapxy(x, y) = ter_debug;
           hardnessxy(x, y) = 0;
+	  printf("Cost: %d\n", p->cost);
         }
       }
       heap_delete(&h);
       return;
     }
 
+//Diagonal Movement
+    if ((path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].hn) &&
+        (path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].cost >
+         p->cost )) {
+      path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].cost =
+        p->cost ;
+      path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] - 1]
+				   [p->pos[dim_x]  +1].hn);
+    }
+    if ((path[p->pos[dim_y]  -1][p->pos[dim_x] - 1].hn) &&
+        (path[p->pos[dim_y]  -1][p->pos[dim_x] - 1].cost >
+         p->cost)) {
+      path[p->pos[dim_y] -1 ][p->pos[dim_x] - 1].cost =
+        p->cost;
+      path[p->pos[dim_y]  -1][p->pos[dim_x] - 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] -1 ][p->pos[dim_x] - 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]  -1]
+				   [p->pos[dim_x] - 1].hn);
+    }
+
+    if ((path[p->pos[dim_y] +1 ][p->pos[dim_x] + 1].hn) &&
+        (path[p->pos[dim_y] +1 ][p->pos[dim_x] + 1].cost >
+         p->cost )) {
+      path[p->pos[dim_y] +1 ][p->pos[dim_x] + 1].cost =
+        p->cost ;
+      path[p->pos[dim_y] +1 ][p->pos[dim_x] + 1].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] +1 ][p->pos[dim_x] + 1].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y]  +1]
+				   [p->pos[dim_x] + 1].hn);
+    }
+    if ((path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].hn) &&
+        (path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].cost >
+         p->cost )) {
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].cost =
+        p->cost;
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].from[dim_y] = p->pos[dim_y];
+      path[p->pos[dim_y] + 1][p->pos[dim_x] -1 ].from[dim_x] = p->pos[dim_x];
+      heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
+				   [p->pos[dim_x]-1  ].hn);
+    }
+    //Straight Line last because it looks better
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost >
          p->cost )) {
@@ -117,6 +161,7 @@ static void dijkstra_open(dungeon_t *d, pair_t from, pair_t to)
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
                                            [p->pos[dim_x]    ].hn);
     }
+    
   }
   for(y=0; y<DUNGEON_Y; y++){
     for(x=0; x<DUNGEON_X; x++)
