@@ -76,7 +76,7 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
       heap_delete(&h);
       return;
     }
-
+    /*
 //Diagonal Movement
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x] +1 ].cost >
@@ -119,6 +119,7 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
       heap_decrease_key_no_replace(&h, path[p->pos[dim_y] + 1]
 				   [p->pos[dim_x]-1  ].hn);
     }
+    */
     //Straight Line last because it looks better
     if ((path[p->pos[dim_y] - 1][p->pos[dim_x]    ].hn) &&
         (path[p->pos[dim_y] - 1][p->pos[dim_x]    ].cost >
@@ -189,18 +190,22 @@ void render_open_paths(dungeon_t *d){
 
   for(y=0; y<DUNGEON_Y; y++)
     for(x=0; x<DUNGEON_X; x++)
-      if(dist[y][x] == INT_MAX){
-	to[dim_y] = y;
-	to[dim_x] = x;
-
-	dijkstra_open(d, dist, from, to);
+      if(dist[y][x] == INT_MAX)
+	if(in_room(d, y, x)){
+	  to[dim_y] = y;
+	  to[dim_x] = x;
+	  
+	  dijkstra_open(d, dist, from, to);
       }
   
 
   
   for(y=0; y<DUNGEON_Y; y++){
     for(x=0; x<DUNGEON_X; x++)
-      if(dist[y][x] != INT_MAX)
+      if(x == d->pc[dim_x] && y == d->pc[dim_y])
+	printf("@");
+    
+      else if(dist[y][x] != INT_MAX)
 	printf("%d", dist[y][x] %10);
       else
 	printf(" ");

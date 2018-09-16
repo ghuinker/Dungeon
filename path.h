@@ -80,6 +80,22 @@ extern "C" {
   void render_all_paths(dungeon_t *d);
   void render_open_paths(dungeon_t *d);
 
+static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
+{
+  int i;
+
+  for (i = 0; i < d->num_rooms; i++) {
+    if ((x >= d->rooms[i].position[dim_x]) &&
+        (x < (d->rooms[i].position[dim_x] + d->rooms[i].size[dim_x])) &&
+        (y >= d->rooms[i].position[dim_y]) &&
+        (y < (d->rooms[i].position[dim_y] + d->rooms[i].size[dim_y]))) {
+      return 1;
+    }
+  }
+
+  return 0;
+}
+
 
 # ifdef __cplusplus
 }
