@@ -1158,6 +1158,9 @@ int main(int argc, char *argv[])
   render_dungeon(&d);
   printf("\n\n");
   render_open_paths(&d);
+  printf("\n\n");
+  render_all_paths(&d);
+  printf("\n");
   
   
   
