@@ -70,9 +70,9 @@ macros.h,611
 
 path.c,139
 static void dijkstra_open(19,247
-static void dijkstra_tunnel(175,5916
-void render_all_paths(335,11806
-void render_open_paths(374,12556
+static void dijkstra_tunnel(176,5942
+void render_all_paths(336,11672
+void render_open_paths(380,12439
 
 path.h,1446
 # define PATH_H2,15
