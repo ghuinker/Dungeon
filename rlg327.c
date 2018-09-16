@@ -1157,9 +1157,13 @@ int main(int argc, char *argv[])
   d.pc[dim_x] = d.rooms[0].position[dim_x];
   d.pc[dim_y] = d.rooms[0].position[dim_y];
 
-  render_dungeon(&d);
-  printf("\n\n");
+
   render_open_paths(&d);
+  printf("\n\n");
+  render_dungeon(&d);
+  
+  
+  
 
   if (do_save) {
     if (do_save_seed) {
