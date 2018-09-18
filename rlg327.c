@@ -1017,8 +1017,8 @@ int read_pgm(dungeon_t *d, char *pgm)
 
 void setRandomPC(dungeon_t *d){
   while(hardnesspair(d->pc)){
-    d->pc[dim_x]= rand_range(0, DUNGEON_X);
-    d->pc[dim_y]= rand_range(0, DUNGEON_Y);
+    d->pc[dim_x]= rand_range(1, DUNGEON_X-1);
+    d->pc[dim_y]= rand_range(1, DUNGEON_Y-1);
     printf("%d, %d\n", d->pc[dim_x], d->pc[dim_y]);
   }
 }
@@ -1167,9 +1167,9 @@ int main(int argc, char *argv[])
   render_dungeon(&d);
   printf("\n\n");
   render_open_paths(&d);
-  printf("\n\n");
-  render_all_paths(&d);
-  printf("\n");
+  //printf("\n\n");
+  //render_all_paths(&d);
+  //printf("\n");
   
   
   

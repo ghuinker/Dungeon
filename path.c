@@ -60,7 +60,7 @@ static void dijkstra_open(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  pa
     p->hn = NULL;
     
     if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
-      int pos = 0;
+      int pos = 1;
       for (x = to[dim_x], y = to[dim_y];
            (x != from[dim_x]) || (y != from[dim_y]);
            p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
@@ -220,7 +220,7 @@ static void dijkstra_tunnel(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  
     p->hn = NULL;
     
     if ((p->pos[dim_y] == to[dim_y]) && p->pos[dim_x] == to[dim_x]) {
-      int pos = 0;
+      int pos = 1;
       for (x = to[dim_x], y = to[dim_y];
            (x != from[dim_x]) || (y != from[dim_y]);
            p = &path[y][x], x = p->from[dim_x], y = p->from[dim_y]) {
@@ -333,8 +333,8 @@ static void dijkstra_tunnel(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X],  
   
 }
 
-void render_all_paths(dungeon_t *d){
-  printf("Rendering Tunnel Paths\n");
+void render_all_paths(dungeon_t *d, uint32_t dist[DUNGEON_Y][DUNGEON_X]){
+  printf("\n\nRendering Tunnel Paths\n");
   
   int y, x;
 
@@ -343,20 +343,11 @@ void render_all_paths(dungeon_t *d){
   from[dim_y] = d->pc[dim_y];
  
 
-  uint32_t dist[DUNGEON_Y][DUNGEON_X];
-  for (y = 0; y < DUNGEON_Y; y++) {
-    for (x = 0; x < DUNGEON_X; x++) {
-      dist[y][x] = INT_MAX;
-    }
-  }
-
-
-	    
-  
+  //uint32_t dist[DUNGEON_Y][DUNGEON_X];
 
   for(y=0; y<DUNGEON_Y; y++)
-    for(x=0; x<DUNGEON_X; x++)
-	  if(dist[y][x] == INT_MAX){
+    for(x=0; x<DUNGEON_X; x++){
+      //if(dist[y][x] == INT_MAX){
 	    to[dim_y] = y;
 	    to[dim_x] = x;
 	    dijkstra_tunnel(d, dist, to, from);
@@ -370,9 +361,10 @@ void render_all_paths(dungeon_t *d){
       if(x == d->pc[dim_x] && y == d->pc[dim_y])
 	printf("@");
       else if(dist[y][x] != INT_MAX)
-	printf("%d", dist[y][x] %10);
+	printf("%d", dist[y][x] %10); 
       else
 	printf(" ");
+    
     printf("\n");
   }
 }
@@ -400,8 +392,8 @@ void render_open_paths(dungeon_t *d){
 
   for(y=0; y<DUNGEON_Y; y++)
     for(x=0; x<DUNGEON_X; x++)
-	if(in_room(d, y, x))
-	  if(dist[y][x] == INT_MAX){
+      if(in_room(d, y, x)){
+	  //if(dist[y][x] == INT_MAX){
 	    
 	    to[dim_y] = y;
 	    to[dim_x] = x;
@@ -420,5 +412,7 @@ void render_open_paths(dungeon_t *d){
 	printf(" ");
     printf("\n");
   }
+
+  render_all_paths(d, dist);
   
 }

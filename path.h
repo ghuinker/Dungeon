@@ -77,7 +77,7 @@ extern "C" {
   }
 
   //Path.c
-  void render_all_paths(dungeon_t *d);
+  //void render_all_paths(dungeon_t *d);
   void render_open_paths(dungeon_t *d);
 
 static uint32_t in_room(dungeon_t *d, int16_t y, int16_t x)
