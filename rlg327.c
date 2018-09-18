@@ -1015,6 +1015,14 @@ int read_pgm(dungeon_t *d, char *pgm)
   return 0;
 }
 
+void setRandomPC(dungeon_t *d){
+  while(hardnesspair(d->pc)){
+    d->pc[dim_x]= rand_range(0, DUNGEON_X);
+    d->pc[dim_y]= rand_range(0, DUNGEON_Y);
+    printf("%d, %d\n", d->pc[dim_x], d->pc[dim_y]);
+  }
+}
+
 void usage(char *name)
 {
   fprintf(stderr,
@@ -1152,8 +1160,9 @@ int main(int argc, char *argv[])
   }
 
   /* Set a valid position for the PC */
-  d.pc[dim_x] = d.rooms[0].position[dim_x];
-  d.pc[dim_y] = d.rooms[0].position[dim_y];
+  d.pc[dim_x] = 0;
+  d.pc[dim_y] = 0;
+  setRandomPC(&d);
 
   render_dungeon(&d);
   printf("\n\n");
