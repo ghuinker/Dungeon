@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
   time_t seed;
   struct timeval tv;
   uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image, do_save_seed, do_save_image;
+  uint32_t do_load, do_save, do_seed, do_image, do_save_seed, do_save_image, do_num_mon;
   uint32_t long_arg;
   char *save_file;
   char *load_file;
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
   
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
-  do_load = do_save = do_image = do_save_seed = do_save_image = 0;
+  do_load = do_save = do_image = do_save_seed = do_save_image = do_num_mon =0;
   do_seed = 1;
   save_file = load_file = NULL;
 
@@ -60,6 +60,14 @@ int main(int argc, char *argv[])
           long_arg = 1; /* handle long and short args at the same place.  */
         }
         switch (argv[i][1]) {
+	case 'n':
+	  if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-nummon"))) {
+            usage(argv[0]);
+	  }
+	  do_num_mon =1;
+	  break;
+          
         case 'r':
           if ((!long_arg && argv[i][2]) ||
               (long_arg && strcmp(argv[i], "-rand")) ||
@@ -116,7 +124,7 @@ int main(int argc, char *argv[])
           }
           break;
         default:
-          usage(argv[0]);
+	    usage(argv[0]);
         }
       } else { /* No dash */
         usage(argv[0]);
@@ -159,10 +167,11 @@ int main(int argc, char *argv[])
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
-  render_distance_map(&d);
-  render_tunnel_distance_map(&d);
-  render_hardness_map(&d);
-  render_movement_cost_map(&d);
+  printf("\n %d", do_num_mon);
+  //render_distance_map(&d);
+  //render_tunnel_distance_map(&d);
+  //render_hardness_map(&d);
+  //render_movement_cost_map(&d);
 
   if (do_save) {
     if (do_save_seed) {

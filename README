@@ -1,1 +1,0 @@
-All Code was written in C, and all requirements from previous homework assignments are met. Pc was placed in random location, and three maps (original, open path finder, tunnel pathfinder) are generated using Dijkstra's Algorithm.
