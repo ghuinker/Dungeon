@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
   time_t seed;
   struct timeval tv;
   uint32_t i;
-  uint32_t do_load, do_save, do_seed, do_image, do_save_seed, do_save_image, do_num_mon;
+  uint32_t do_load, do_save, do_seed, do_image, do_save_seed, do_save_image, do_num_mon, nummon;
   uint32_t long_arg;
   char *save_file;
   char *load_file;
@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = do_num_mon =0;
   do_seed = 1;
+  nummon = 10;
   save_file = load_file = NULL;
 
   /* The project spec requires '--load' and '--save'.  It's common  *
@@ -138,7 +139,14 @@ int main(int argc, char *argv[])
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
   }
-
+  if(do_num_mon){
+    printf("Please enter number of monsters: ");
+    scanf("%d", &nummon);
+    if(nummon>20)
+      nummon = 10;
+    if(nummon<0)
+      nummon = 10;
+  }
   printf("Seed is %ld.\n", seed);
   srand(seed);
 
@@ -167,7 +175,6 @@ int main(int argc, char *argv[])
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
-  printf("\n %d", do_num_mon);
   //render_distance_map(&d);
   //render_tunnel_distance_map(&d);
   //render_hardness_map(&d);
