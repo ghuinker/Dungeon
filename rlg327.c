@@ -6,6 +6,8 @@
 
 #include "dungeon.h"
 #include "path.h"
+#include "mon.h"
+
 
 void usage(char *name)
 {
@@ -139,18 +141,12 @@ int main(int argc, char *argv[])
     gettimeofday(&tv, NULL);
     seed = (tv.tv_usec ^ (tv.tv_sec << 20)) & 0xffffffff;
   }
-  if(do_num_mon){
-    printf("Please enter number of monsters: ");
-    scanf("%d", &nummon);
-    if(nummon>20)
-      nummon = 10;
-    if(nummon<0)
-      nummon = 10;
-  }
+  
   printf("Seed is %ld.\n", seed);
   srand(seed);
 
   init_dungeon(&d);
+
 
   if (do_load) {
     read_dungeon(&d, load_file);
@@ -169,7 +165,22 @@ int main(int argc, char *argv[])
   }
 
   printf("PC is at (y, x): %d, %d\n",
-         d.pc.position[dim_y], d.pc.position[dim_x]);
+	 d.pc.position[dim_y], d.pc.position[dim_x]);
+
+  if(do_num_mon){
+    printf("Please enter number of monsters (between 0-20): ");
+    scanf("%d", &nummon);
+    if(nummon>20)
+      nummon = 20;
+    if(nummon<0)
+      nummon = 0;
+  }
+
+  init_monsters(&d, nummon);
+  
+for(i=0; i<d.nummon; i++)
+  printf("Type: %x, x: %d, y: %d\n",d.monsters[i].type, d.monsters[i].position[dim_x], d.monsters[i].position[dim_y]);
+
 
   render_dungeon(&d);
 

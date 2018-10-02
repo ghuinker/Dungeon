@@ -8,7 +8,7 @@ typedef enum dim 7,190
 } dim_t;11,238
 typedef int16_t pair_t[pair_t13,248
 
-dungeon.c,1425
+dungeon.c,1426
 #define DUMP_HARDNESS_IMAGES 13,202
 typedef struct corridor_path 15,234
   heap_node_t *hn;hn16,265
@@ -37,64 +37,66 @@ static int place_rooms(506,15892
 static int make_rooms(543,17079
 int gen_dungeon(566,17640
 void render_dungeon(578,17783
-void delete_dungeon(611,18565
-void init_dungeon(616,18622
-int write_dungeon_map(621,18679
-int write_rooms(634,18908
-uint32_t calculate_dungeon_size(654,19327
-int write_dungeon(661,19574
-int read_dungeon_map(724,21087
-int read_rooms(747,21685
-int calculate_num_rooms(801,23502
-int read_dungeon(809,23742
-int read_pgm(888,25644
-void render_hardness_map(973,28047
-void render_movement_cost_map(996,28574
-void render_distance_map(1018,29079
-void render_tunnel_distance_map(1054,30030
+void delete_dungeon(623,18841
+void init_dungeon(628,18898
+int write_dungeon_map(633,18955
+int write_rooms(646,19184
+uint32_t calculate_dungeon_size(666,19603
+int write_dungeon(673,19850
+int read_dungeon_map(736,21363
+int read_rooms(759,21961
+int calculate_num_rooms(813,23778
+int read_dungeon(821,24018
+int read_pgm(900,25920
+void render_hardness_map(985,28323
+void render_movement_cost_map(1008,28850
+void render_distance_map(1030,29355
+void render_tunnel_distance_map(1066,30306
 
-dungeon.h,1142
+dungeon.h,1207
 # define DUNGEON_H2,18
-#define DUNGEON_X 8,98
-#define DUNGEON_Y 9,132
-#define MIN_ROOMS 10,166
-#define MAX_ROOMS 11,199
-#define ROOM_MIN_X 12,232
-#define ROOM_MIN_Y 13,265
-#define ROOM_MAX_X 14,298
-#define ROOM_MAX_Y 15,332
-#define SAVE_DIR 16,365
-#define DUNGEON_SAVE_FILE 17,406
-#define DUNGEON_SAVE_SEMANTIC 18,447
-#define DUNGEON_SAVE_VERSION 19,493
-#define mappair(21,528
-#define mapxy(22,585
-#define hardnesspair(23,620
-#define hardnessxy(24,687
-typedef enum __attribute__ ((__packed__)) terrain_type 26,733
-  ter_debug,27,790
-  ter_wall,28,803
-  ter_wall_immutable,29,815
-  ter_floor,30,837
-  ter_floor_room,31,850
-  ter_floor_hall,32,868
-} terrain_type_t;33,886
-typedef struct room 35,905
-  pair_t position;36,927
-  pair_t size;37,946
-} room_t;38,961
-typedef struct pc 40,972
-  pair_t position;41,992
-} pc_t;42,1011
-typedef struct dungeon 44,1020
-  uint32_t num_rooms;45,1045
-  room_t *rooms;rooms46,1067
-  terrain_type_t map[map47,1084
-  uint8_t hardness[hardness56,1737
-  uint8_t pc_distance[pc_distance57,1779
-  uint8_t pc_tunnel[pc_tunnel58,1824
-  pc_t pc;59,1867
-} dungeon_t;60,1878
+#define DUNGEON_X 9,116
+#define DUNGEON_Y 10,150
+#define MIN_ROOMS 11,184
+#define MAX_ROOMS 12,217
+#define ROOM_MIN_X 13,250
+#define ROOM_MIN_Y 14,283
+#define ROOM_MAX_X 15,316
+#define ROOM_MAX_Y 16,350
+#define SAVE_DIR 17,383
+#define DUNGEON_SAVE_FILE 18,424
+#define DUNGEON_SAVE_SEMANTIC 19,465
+#define DUNGEON_SAVE_VERSION 20,511
+#define mappair(22,546
+#define mapxy(23,603
+#define hardnesspair(24,638
+#define hardnessxy(25,705
+typedef enum __attribute__ ((__packed__)) terrain_type 27,751
+  ter_debug,28,808
+  ter_wall,29,821
+  ter_wall_immutable,30,833
+  ter_floor,31,855
+  ter_floor_room,32,868
+  ter_floor_hall,33,886
+} terrain_type_t;34,904
+typedef struct room 36,923
+  pair_t position;37,945
+  pair_t size;38,964
+} room_t;39,979
+typedef struct pc 41,990
+  pair_t position;42,1010
+} pc_t;43,1029
+typedef struct dungeon 45,1038
+  uint32_t num_rooms;46,1063
+  room_t *rooms;rooms47,1085
+  terrain_type_t map[map48,1102
+  uint8_t hardness[hardness57,1755
+  uint8_t pc_distance[pc_distance58,1797
+  uint8_t pc_tunnel[pc_tunnel59,1842
+  pc_t pc;60,1885
+  uint8_t nummon;61,1896
+  mon_t *monsters;monsters62,1914
+} dungeon_t;63,1933
 
 heap.c,1009
 #undef min4,39
@@ -165,6 +167,19 @@ macros.h,611
 # define frand(173,7872
 # define structdup(180,7984
 
+mon.c,50
+void create_mon(9,121
+void init_monsters(24,551
+
+mon.h,175
+# define MON_H2,14
+typedef struct dungeon dungeon_t;12,146
+typedef struct mon{mon14,181
+  pair_t position;15,201
+  char speed;16,220
+  char type;17,234
+} mon_t;18,247
+
 path.c,302
 static dungeon_t *dungeon;dungeon12,633
 typedef struct path 14,661
@@ -183,8 +198,8 @@ path.h,93
 typedef struct dungeon dungeon_t;6,63
 
 rlg327.c,36
-void usage(10,135
-int main(20,345
+void usage(12,153
+int main(22,363
 
 utils.c,25
 int makedirectory(9,124

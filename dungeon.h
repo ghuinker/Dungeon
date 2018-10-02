@@ -4,6 +4,7 @@
 # include "heap.h"
 # include "macros.h"
 # include "dims.h"
+# include "mon.h"
 
 #define DUNGEON_X              80
 #define DUNGEON_Y              21
@@ -57,6 +58,8 @@ typedef struct dungeon {
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   pc_t pc;
+  uint8_t nummon;
+  mon_t *monsters;
 } dungeon_t;
 
 void init_dungeon(dungeon_t *d);

@@ -579,8 +579,7 @@ void render_dungeon(dungeon_t *d){
 
   pair_t p;
   int i, placed;
-
-    for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
+  for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (p[dim_x] ==  d->pc.position[dim_x] &&
           p[dim_y] ==  d->pc.position[dim_y]) {
@@ -588,10 +587,10 @@ void render_dungeon(dungeon_t *d){
 	continue;
       } 
       placed = 0;
-      for(i=0; i<d->nummon; i++){
+      for(i=0; i<d->numMonsters; i++){
 	if(p[dim_x] == d->monsters[i].position[dim_x])
 	  if(p[dim_y] == d->monsters[i].position[dim_y]){
-	    printf("%x",d->monsters[i].type);
+	    putchar(d->monsters[i].symbol);
 	    placed = 1;
 	    break;
 	  }
