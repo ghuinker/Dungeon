@@ -68,7 +68,9 @@ int main(int argc, char *argv[])
               (long_arg && strcmp(argv[i], "-nummon"))) {
             usage(argv[0]);
 	  }
-	  do_num_mon =1;
+	  if((argc > i+1) && argv[i+1][0] != '-')
+	    nummon = atoi(argv[++i]);
+	  putchar('0' + nummon);
 	  break;
           
         case 'r':
@@ -167,12 +169,14 @@ int main(int argc, char *argv[])
   printf("PC is at (y, x): %d, %d\n",
 	 d.pc.position[dim_y], d.pc.position[dim_x]);
 
+  /*
   if(do_num_mon){
     printf("Please enter number of monsters: ");
     scanf("%d", &nummon);;
     if(nummon<0)
       nummon = 0;
   }
+  */
 
   init_monsters(&d, nummon);
 

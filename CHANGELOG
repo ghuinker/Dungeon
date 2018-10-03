@@ -43,3 +43,5 @@ Day 7: 10/2 23:00 -10/3 03:00
 	BUG moving monsters won't work correctly
 Day 8: 10/3 16:30 - 22:00
 	Changing to make monsters move just straight and only based on tunneling
+	The monsters now move correctly based on speed and loop works
+	The movement is based on an array and not heap so hopefully can implement with heap later
