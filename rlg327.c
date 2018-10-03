@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 
   move_mon(&d, 0);
 
-  printf("Monster Moved\n");
+  //printf("Monster Moved\n");
 
   render_dungeon(&d);
 

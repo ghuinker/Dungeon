@@ -22,9 +22,9 @@ int get_bit(int num, int bit){
   return (num >> bit) & 1;
 }
 
-void shortest(uint8_t map[DUNGEON_Y][DUNGEON_X],int in_x, int in_y, pair_t *pos){
+void shortest(uint8_t map[DUNGEON_Y][DUNGEON_X],int in_x, int in_y, pair_t pos){
   pair_t move;
-  int min=UCHAR_MAX;
+  int min=10;
   int slick=0;
   int map_cost;
   
@@ -48,11 +48,12 @@ void shortest(uint8_t map[DUNGEON_Y][DUNGEON_X],int in_x, int in_y, pair_t *pos)
       y = 0;
     
     printf("Shortest: %d, %d\n",in_x +x -fix , in_y +y - fix);
-    map_cost = map[in_x +x-fix][in_y +y -fix];
-    printf("Map Cost: %d\n",map_cost); 
-    if(map_cost < min){
+    map_cost = map[in_x +x-fix][in_y +y -fix] %10;
+    printf("Map Cost: %d\n",map_cost);
+    
+    if(map_cost < min || (map_cost ==9 && map[in_x][in_y] == 0)){
       printf("Cost Down\n");
-      min = map_cost;
+      min = map_cost%10;
       move[dim_x] = in_x +x -fix;
       move[dim_y] = in_y +y -fix ;
     }
@@ -63,8 +64,8 @@ void shortest(uint8_t map[DUNGEON_Y][DUNGEON_X],int in_x, int in_y, pair_t *pos)
 
   if(min == UCHAR_MAX)
     return;
-  printf("New Space should be: %d, %d", move[dim_x], move[dim_y]);
-  pos = &move;
+  printf("New Space should be: %d, %d\n", move[dim_x], move[dim_y]);
+  pos = move;
 }
 
 void straight_path(pair_t pc, pair_t *mon){
@@ -101,9 +102,9 @@ void move_mon(dungeon_t *d, int mon){
   if((type & (1<<0)) >> 0){
     //Non Tunneling
     if(!((type & (1<<2)) >> 2)){
-      shortest(d->pc_distance, pos[dim_x], pos[dim_y],&pos);
+      shortest(d->pc_distance, pos[dim_x], pos[dim_y], d->monsters[mon].position);
     } else{
-     shortest(d->pc_tunnel, pos[dim_x], pos[dim_y], &pos);
+     shortest(d->pc_tunnel, pos[dim_x], pos[dim_y], d->monsters[mon].position);
     }
   } else{
     straight_path(d->pc.position, next_pos);
