@@ -43,12 +43,10 @@ void shortest(dungeon_t *d, int mon, int tun, int in_x, int in_y){
     }
     
     
-    printf("Shortest: %d, %d\n",in_x +x,in_y +y);
     if(tun)
       map_cost = d->pc_tunnel[in_y +y][in_x +x];
     else
       map_cost = d->pc_distance[in_y +y][in_x +x];
-    printf("Map Cost: %d\n",map_cost);
     
     if(map_cost < min){
       min = map_cost;
@@ -59,9 +57,10 @@ void shortest(dungeon_t *d, int mon, int tun, int in_x, int in_y){
 
   if(min == 256)
     return;
-  printf("New Space should be: %d, %d\n", move[dim_x], move[dim_y]);
-  d->monsters[mon].position[dim_x] = move[dim_x];
-  d->monsters[mon].position[dim_y] = move[dim_y];
+  if(tun || hardnesspair(move) == 0){
+    d->monsters[mon].position[dim_x] = move[dim_x];
+    d->monsters[mon].position[dim_y] = move[dim_y];
+  }
 }
 
 void straight_path(pair_t pc, pair_t *mon){
@@ -91,12 +90,12 @@ void move_mon(dungeon_t *d, int mon){
   
   
   //Can't see pc (and erratic)
-  if(!((type & (1<<0)) >> 0) && !is_in_room(d, pos))
-    return;
+  if(!get_bit(type,1))
+    printf("Not Tele\n");
   
   printf("Previos x: %d, y: %d\n", pos[dim_x], pos[dim_y]);
   //Smart
-  if(get_bit(type, 0)){
+  if(get_bit(type, 0)==1){
     //Non Tunneling
     if(!get_bit(type, 2)){
       shortest(d, mon, 0, pos[dim_x], pos[dim_y]);
@@ -105,6 +104,7 @@ void move_mon(dungeon_t *d, int mon){
     }
   } else{
     straight_path(d->pc.position, next_pos);
+    printf("NextPos: %d, %d\n", *next_pos[dim_x], *next_pos[dim_y]);
     //Non tunneling
     if(!get_bit(type, 2)){
       if(hardnesspair(*next_pos) != 0)

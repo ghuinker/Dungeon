@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
   dijkstra(&d);
   dijkstra_tunnel(&d);
   
-  render_distance_map(&d);
+  //render_distance_map(&d);
   //render_tunnel_distance_map(&d);
   //render_hardness_map(&d);
   //render_movement_cost_map(&d);
