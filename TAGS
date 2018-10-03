@@ -172,9 +172,9 @@ int is_in_room(10,141
 int get_bit(21,429
 void shortest(25,490
 void straight_path(66,1345
-void move_mon(78,1651
-void create_mon(123,2768
-void init_monsters(138,3198
+void move_mon(80,1953
+void create_mon(137,3451
+void init_monsters(152,3881
 
 mon.h,175
 # define MON_H2,14

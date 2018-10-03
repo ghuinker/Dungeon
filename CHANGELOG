@@ -35,3 +35,11 @@ Day 5: 9/16 16:00 - 17:30
 Day 6: 9/17 23:30 - 23:40
 	PC location is random
 	Minor Bug and Number fixes
+Day 7: 10/2 23:00 -10/3 03:00
+	Imported instructors code
+	Created a mon.c with header function and methods that are implemented
+	Added monsters array to dungeon struct
+	Monsters are displayed
+	BUG moving monsters won't work correctly
+Day 8: 10/3 16:30 - 22:00
+	Changing to make monsters move just straight and only based on tunneling

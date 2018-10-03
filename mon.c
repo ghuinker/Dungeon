@@ -63,26 +63,41 @@ void shortest(dungeon_t *d, int mon, int tun, int in_x, int in_y){
   }
 }
 
-void straight_path(pair_t pc, pair_t *mon){
-  if(pc[dim_x]<*mon[dim_x])
-    *mon[dim_x] = *mon[dim_x] -1;
-  else if(pc[dim_x]>*mon[dim_x])
-    *mon[dim_x] = *mon[dim_x] +1;
+void straight_path(dungeon_t *d, int mon){
+  
+  if(d->pc.position[dim_x]<d->monsters[mon].position[dim_x])
+    d->monsters[mon].position[dim_x] = d->monsters[mon].position[dim_x] -1;
+  else if(d->pc.position[dim_x]>d->monsters[mon].position[dim_x])
+   d->monsters[mon].position[dim_x] = d->monsters[mon].position[dim_x] +1;
 
-  if(pc[dim_y]<*mon[dim_y])
-    *mon[dim_y] = *mon[dim_y] -1;
-  else if(pc[dim_y]>*mon[dim_y])
-    *mon[dim_y] = *mon[dim_y] +1;
+  if(d->pc.position[dim_y]<d->monsters[mon].position[dim_y])
+    d->monsters[mon].position[dim_y] = d->monsters[mon].position[dim_y] -1;
+  else if(d->pc.position[dim_y]>d->monsters[mon].position[dim_y])
+    d->monsters[mon].position[dim_y] = d->monsters[mon].position[dim_y] +1;
+
 }
 
 void move_mon(dungeon_t *d, int mon){
   //0000
-  pair_t pos;
-  pair_t *next_pos;
+  pair_t prev;
   char type = d->monsters[mon].type;
 
-  
+  prev[dim_x] = d->monsters[mon].position[dim_x];
+  prev[dim_y] = d->monsters[mon].position[dim_y];
 
+  printf("Previos x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
+  //Just move based on tunneling
+  straight_path(d, mon);
+  if(!get_bit(type, 2)){
+      if(hardnesspair(d->monsters[mon].position)!=0){
+	printf("Resetting Position\n");
+	d->monsters[mon].position[dim_x] = prev[dim_x];
+	d->monsters[mon].position[dim_y] = prev[dim_y];
+	}
+    }
+  printf("Next x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
+  
+  /*
   pos[dim_x] = d->monsters[mon].position[dim_x];
   pos[dim_y] = d->monsters[mon].position[dim_y];
   next_pos = &(d->monsters[mon].position);
@@ -93,7 +108,7 @@ void move_mon(dungeon_t *d, int mon){
   if(!get_bit(type,1))
     printf("Not Tele\n");
   
-  printf("Previos x: %d, y: %d\n", pos[dim_x], pos[dim_y]);
+  
   //Smart
   if(get_bit(type, 0)==1){
     //Non Tunneling
@@ -115,7 +130,8 @@ void move_mon(dungeon_t *d, int mon){
     
   }
 
-  printf("Next x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
+  
+  */
 }
 
 void create_mon(dungeon_t *d, mon_t *mon){
