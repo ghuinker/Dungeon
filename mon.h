@@ -19,6 +19,7 @@ typedef struct mon{
 
 
 void init_monsters(dungeon_t *d, char nummon);
+void move_mon(dungeon_t *d, int mon);
 
 
 #endif

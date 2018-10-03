@@ -168,24 +168,28 @@ int main(int argc, char *argv[])
 	 d.pc.position[dim_y], d.pc.position[dim_x]);
 
   if(do_num_mon){
-    printf("Please enter number of monsters (between 0-20): ");
-    scanf("%d", &nummon);
-    if(nummon>20)
-      nummon = 20;
+    printf("Please enter number of monsters: ");
+    scanf("%d", &nummon);;
     if(nummon<0)
       nummon = 0;
   }
 
   init_monsters(&d, nummon);
-  
-for(i=0; i<d.nummon; i++)
-  printf("Type: %x, x: %d, y: %d\n",d.monsters[i].type, d.monsters[i].position[dim_x], d.monsters[i].position[dim_y]);
-
 
   render_dungeon(&d);
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
+
+  printf("Moving monster %x\n", d.monsters[0].type);
+
+  move_mon(&d, 0);
+
+  printf("Monster Moved\n");
+
+  render_dungeon(&d);
+
+  
   //render_distance_map(&d);
   //render_tunnel_distance_map(&d);
   //render_hardness_map(&d);

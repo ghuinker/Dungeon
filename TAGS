@@ -167,9 +167,14 @@ macros.h,611
 # define frand(173,7872
 # define structdup(180,7984
 
-mon.c,50
-void create_mon(9,121
-void init_monsters(24,551
+mon.c,171
+int is_in_room(10,141
+int get_bit(21,429
+void shortest(25,490
+void straight_path(70,1366
+void move_mon(82,1672
+void create_mon(123,2727
+void init_monsters(138,3157
 
 mon.h,175
 # define MON_H2,14
