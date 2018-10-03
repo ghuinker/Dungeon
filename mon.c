@@ -22,50 +22,46 @@ int get_bit(int num, int bit){
   return (num >> bit) & 1;
 }
 
-void shortest(uint8_t map[DUNGEON_Y][DUNGEON_X],int in_x, int in_y, pair_t pos){
+void shortest(dungeon_t *d, int mon, int tun, int in_x, int in_y){
   pair_t move;
-  int min=10;
-  int slick=0;
-  int map_cost;
-  
-  while(slick<8){
-    int x=0;
-    int y=0;
-    int fix=0;
-    
-    if(get_bit(slick,0))
-      x=1;
-    if(get_bit(slick, 1))
-      y = 1;
-    
-    if(get_bit(slick, 2)){
-      fix=1;
-    }
+  int min=256;
+  int i,x,y, map_cost;
 
-    if(x>DUNGEON_X-1 || x<1)
-      x = 0;
-    if(y>DUNGEON_Y-1 || y<1)
-      y = 0;
+  move[dim_x] = in_x;
+  move[dim_y] = in_y; 
+  
+  for(i=0; i<8; i++){
+    switch(i){
+    case 0:x=0;y=-1;break;
+    case 1:x=1;y=-1;break;
+    case 2:x=1;y=0;break;
+    case 3:x=1;y=1;break;
+    case 4:x=0;y=1;break;
+    case 5:x=-1;y=1;break;
+    case 6:x=-1;y=0;break;
+    case 7:x=-1;y=-1;break;
+    }
     
-    printf("Shortest: %d, %d\n",in_x +x -fix , in_y +y - fix);
-    map_cost = map[in_x +x-fix][in_y +y -fix] %10;
+    
+    printf("Shortest: %d, %d\n",in_x +x,in_y +y);
+    if(tun)
+      map_cost = d->pc_tunnel[in_y +y][in_x +x];
+    else
+      map_cost = d->pc_distance[in_y +y][in_x +x];
     printf("Map Cost: %d\n",map_cost);
     
-    if(map_cost < min || (map_cost ==9 && map[in_x][in_y] == 0)){
-      printf("Cost Down\n");
-      min = map_cost%10;
-      move[dim_x] = in_x +x -fix;
-      move[dim_y] = in_y +y -fix ;
+    if(map_cost < min){
+      min = map_cost;
+      move[dim_x] = in_x +x;
+      move[dim_y] = in_y +y;
     }
-
-    
-    slick++;
   }
 
-  if(min == UCHAR_MAX)
+  if(min == 256)
     return;
   printf("New Space should be: %d, %d\n", move[dim_x], move[dim_y]);
-  pos = move;
+  d->monsters[mon].position[dim_x] = move[dim_x];
+  d->monsters[mon].position[dim_y] = move[dim_y];
 }
 
 void straight_path(pair_t pc, pair_t *mon){
@@ -97,19 +93,20 @@ void move_mon(dungeon_t *d, int mon){
   //Can't see pc (and erratic)
   if(!((type & (1<<0)) >> 0) && !is_in_room(d, pos))
     return;
+  
   printf("Previos x: %d, y: %d\n", pos[dim_x], pos[dim_y]);
   //Smart
-  if((type & (1<<0)) >> 0){
+  if(get_bit(type, 0)){
     //Non Tunneling
-    if(!((type & (1<<2)) >> 2)){
-      shortest(d->pc_distance, pos[dim_x], pos[dim_y], d->monsters[mon].position);
+    if(!get_bit(type, 2)){
+      shortest(d, mon, 0, pos[dim_x], pos[dim_y]);
     } else{
-     shortest(d->pc_tunnel, pos[dim_x], pos[dim_y], d->monsters[mon].position);
+      shortest(d, mon, 1, pos[dim_x], pos[dim_y]);
     }
   } else{
     straight_path(d->pc.position, next_pos);
     //Non tunneling
-    if(!((type & (1<<2)) >> 2)){
+    if(!get_bit(type, 2)){
       if(hardnesspair(*next_pos) != 0)
 	next_pos = &pos;
     }

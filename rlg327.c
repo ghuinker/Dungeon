@@ -180,7 +180,12 @@ int main(int argc, char *argv[])
 
   dijkstra(&d);
   dijkstra_tunnel(&d);
-
+  
+  render_distance_map(&d);
+  //render_tunnel_distance_map(&d);
+  //render_hardness_map(&d);
+  //render_movement_cost_map(&d);
+ 
   printf("Moving monster %x\n", d.monsters[0].type);
 
   move_mon(&d, 0);
@@ -190,10 +195,7 @@ int main(int argc, char *argv[])
   render_dungeon(&d);
 
   
-  //render_distance_map(&d);
-  //render_tunnel_distance_map(&d);
-  //render_hardness_map(&d);
-  //render_movement_cost_map(&d);
+ 
 
   if (do_save) {
     if (do_save_seed) {
