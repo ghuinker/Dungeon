@@ -12,9 +12,11 @@
 typedef struct dungeon dungeon_t;
 
 typedef struct mon{
+  heap_node_t *hn;
   pair_t position;
   char speed;
   char type;
+  int dead;
 } mon_t;
 
 

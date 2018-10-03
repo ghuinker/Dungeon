@@ -85,17 +85,17 @@ void move_mon(dungeon_t *d, int mon){
   prev[dim_x] = d->monsters[mon].position[dim_x];
   prev[dim_y] = d->monsters[mon].position[dim_y];
 
-  printf("Previos x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
+  //printf("Previos x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
   //Just move based on tunneling
   straight_path(d, mon);
   if(!get_bit(type, 2)){
       if(hardnesspair(d->monsters[mon].position)!=0){
-	printf("Resetting Position\n");
+	//printf("Resetting Position\n");
 	d->monsters[mon].position[dim_x] = prev[dim_x];
 	d->monsters[mon].position[dim_y] = prev[dim_y];
 	}
     }
-  printf("Next x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
+  //printf("Next x: %d, y: %d\n", d->monsters[mon].position[dim_x], d->monsters[mon].position[dim_y]);
   
   /*
   pos[dim_x] = d->monsters[mon].position[dim_x];

@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 /* Very slow seed: 686846853 */
 
 #include "dungeon.h"
 #include "path.h"
 #include "mon.h"
-
 
 void usage(char *name)
 {
@@ -186,16 +186,64 @@ int main(int argc, char *argv[])
   //render_hardness_map(&d);
   //render_movement_cost_map(&d);
  
-  printf("Moving monster %x\n", d.monsters[0].type);
 
-  move_mon(&d, 0);
+  //move_mon(&d, 0);
 
-  //printf("Monster Moved\n");
+  //render_dungeon(&d);
 
-  render_dungeon(&d);
-
+  //Heap and running
+  int counts[nummon], new_counts[nummon];
+  int j, max;
   
- 
+  for(i=0; i<nummon; i++)
+    if(max<d.monsters[i].speed)
+      max = d.monsters[i].speed;
+
+  for(i=0; i<nummon; i++){
+    counts[i] = max/d.monsters[i].speed;
+    new_counts[i] = max/d.monsters[i].speed;
+  }
+
+  while(1){
+    max = 0;
+    //Move the monsters
+    
+    for(i=0; i<nummon; i++){
+      if(new_counts[i] >0){
+	move_mon(&d, i);
+	new_counts[i]--;
+	max++;
+      }
+      //If the monster interacts with another monster kill mon
+      if(d.monsters[i].position[dim_x] == d.pc.position[dim_x])
+	if(d.monsters[i].position[dim_y] == d.pc.position[dim_y]){
+	  printf("YOU DEAD\n");
+	  return 1;
+	}
+      for(j=0; j<nummon; j++){
+	if(j == i)
+	  continue;
+	if(d.monsters[i].position[dim_x] == d.monsters[j].position[dim_x])
+	  if(d.monsters[i].position[dim_y] == d.monsters[j].position[dim_y]){
+	    d.monsters[j].dead = 1;
+	  }
+      }
+    }
+    
+    render_dungeon(&d);
+    
+    
+    usleep(250000);
+    if(!max)
+      for(i=0;i<nummon; i++){
+	new_counts[i] = counts[i];
+	//debug
+	//return 0;
+      }
+  }
+  
+  
+  
 
   if (do_save) {
     if (do_save_seed) {

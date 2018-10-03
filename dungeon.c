@@ -589,6 +589,8 @@ void render_dungeon(dungeon_t *d){
       } 
       placed = 0;
       for(i=0; i<d->nummon; i++){
+	if(d->monsters[i].dead)
+	  continue;
 	if(p[dim_x] == d->monsters[i].position[dim_x])
 	  if(p[dim_y] == d->monsters[i].position[dim_y]){
 	    printf("%x",d->monsters[i].type);

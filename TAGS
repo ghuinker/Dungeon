@@ -37,21 +37,21 @@ static int place_rooms(506,15892
 static int make_rooms(543,17079
 int gen_dungeon(566,17640
 void render_dungeon(578,17783
-void delete_dungeon(623,18841
-void init_dungeon(628,18898
-int write_dungeon_map(633,18955
-int write_rooms(646,19184
-uint32_t calculate_dungeon_size(666,19603
-int write_dungeon(673,19850
-int read_dungeon_map(736,21363
-int read_rooms(759,21961
-int calculate_num_rooms(813,23778
-int read_dungeon(821,24018
-int read_pgm(900,25920
-void render_hardness_map(985,28323
-void render_movement_cost_map(1008,28850
-void render_distance_map(1030,29355
-void render_tunnel_distance_map(1066,30306
+void delete_dungeon(625,18879
+void init_dungeon(630,18936
+int write_dungeon_map(635,18993
+int write_rooms(648,19222
+uint32_t calculate_dungeon_size(668,19641
+int write_dungeon(675,19888
+int read_dungeon_map(738,21401
+int read_rooms(761,21999
+int calculate_num_rooms(815,23816
+int read_dungeon(823,24056
+int read_pgm(902,25958
+void render_hardness_map(987,28361
+void render_movement_cost_map(1010,28888
+void render_distance_map(1032,29393
+void render_tunnel_distance_map(1068,30344
 
 dungeon.h,1207
 # define DUNGEON_H2,18
@@ -173,17 +173,19 @@ int get_bit(21,429
 void shortest(25,490
 void straight_path(66,1345
 void move_mon(80,1953
-void create_mon(137,3451
-void init_monsters(152,3881
+void create_mon(137,3457
+void init_monsters(152,3887
 
-mon.h,175
+mon.h,223
 # define MON_H2,14
 typedef struct dungeon dungeon_t;12,146
 typedef struct mon{mon14,181
-  pair_t position;15,201
-  char speed;16,220
-  char type;17,234
-} mon_t;18,247
+  heap_node_t *hn;hn15,201
+  pair_t position;16,220
+  char speed;17,239
+  char type;18,253
+  int dead;19,266
+} mon_t;20,278
 
 path.c,302
 static dungeon_t *dungeon;dungeon12,633
@@ -203,8 +205,8 @@ path.h,93
 typedef struct dungeon dungeon_t;6,63
 
 rlg327.c,36
-void usage(12,153
-int main(22,363
+void usage(12,172
+int main(22,382
 
 utils.c,25
 int makedirectory(9,124
