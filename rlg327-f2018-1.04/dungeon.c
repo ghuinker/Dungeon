@@ -9,6 +9,7 @@
 #include "dungeon.h"
 #include "utils.h"
 #include "heap.h"
+#include "event.h"
 
 #define DUMP_HARDNESS_IMAGES 0
 
@@ -500,6 +501,8 @@ static int empty_dungeon(dungeon_t *d)
     }
   }
 
+  d->is_new = 1;
+
   return 0;
 }
 
@@ -576,14 +579,13 @@ int gen_dungeon(dungeon_t *d)
 }
 
 void render_dungeon(dungeon_t *d){
-
   pair_t p;
 
+  putchar('\n');
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
-      if (p[dim_x] ==  d->pc.position[dim_x] &&
-          p[dim_y] ==  d->pc.position[dim_y]) {
-        putchar('@');
+      if (charpair(p)) {
+        putchar(charpair(p)->symbol);
       } else {
         switch (mappair(p)) {
         case ter_wall:
@@ -606,16 +608,21 @@ void render_dungeon(dungeon_t *d){
     }
     putchar('\n');
   }
+  putchar('\n');
 }
 
 void delete_dungeon(dungeon_t *d)
 {
   free(d->rooms);
+  heap_delete(&d->events);
+  memset(d->character, 0, sizeof (d->character));
 }
 
 void init_dungeon(dungeon_t *d)
 {
   empty_dungeon(d);
+  memset(&d->events, 0, sizeof (d->events));
+  heap_init(&d->events, compare_events, event_delete);
 }
 
 int write_dungeon_map(dungeon_t *d, FILE *f)
