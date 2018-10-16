@@ -28,7 +28,7 @@ typedef struct character 19,288
 cur.c,84
 void render_dungeon_curs(10,141
 void run_curses(41,855
-void init_curses(101,2103
+void init_curses(122,2385
 
 cur.h,23
 # define CURSES_H2,17
