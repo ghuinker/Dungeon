@@ -1,0 +1,8 @@
+#ifndef CURSES_H
+# define CURSES_H
+
+# include <stdint.h>
+
+void init_curses();
+
+#endif

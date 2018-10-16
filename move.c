@@ -103,9 +103,10 @@ void do_moves(dungeon_t *d)
      * and recreated every time we leave and re-enter this function.    */
     e->c = NULL;
     event_delete(e);
-    pc_next_pos(d, next);
-    next[dim_x] += c->position[dim_x];
-    next[dim_y] += c->position[dim_y];
+    //sets next as direction
+    //pc_next_pos(d, next);
+    next[dim_x] = c->position[dim_x];
+    next[dim_y] = c->position[dim_y];
     if (mappair(next) <= ter_floor) {
       mappair(next) = ter_floor_hall;
     }

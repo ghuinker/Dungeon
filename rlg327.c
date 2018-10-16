@@ -10,6 +10,7 @@
 #include "pc.h"
 #include "npc.h"
 #include "move.h"
+#include "cur.h"
 
 const char *victory =
   "\n                                       o\n"
@@ -216,8 +217,15 @@ int main(int argc, char *argv[])
   config_pc(&d);
   gen_monsters(&d);
 
+  init_curses(&d);
+  run_curses(&d);
+
+  delete_dungeon(&d);
+
+  return 0;
+  
   while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
-    render_dungeon(&d);
+    //render_dungeon(&d);
     do_moves(&d);
     usleep(33000);
   }
