@@ -25,10 +25,12 @@ typedef struct character 19,288
   uint32_t kills[kills34,985
 } character_t;35,1019
 
-cur.c,84
-void render_dungeon_curs(10,141
-void run_curses(41,855
-void init_curses(122,2385
+cur.c,139
+void render_dungeon_curs(12,174
+void print_message(43,898
+void clear_message(50,993
+void run_curses(55,1046
+void init_curses(140,2710
 
 cur.h,23
 # define CURSES_H2,17

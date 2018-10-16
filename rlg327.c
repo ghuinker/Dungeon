@@ -222,16 +222,7 @@ int main(int argc, char *argv[])
 
   delete_dungeon(&d);
 
-  return 0;
-  
-  while (pc_is_alive(&d) && dungeon_has_npcs(&d)) {
-    //render_dungeon(&d);
-    do_moves(&d);
-    usleep(33000);
-  }
-
-  render_dungeon(&d);
-
+    
   if (do_save) {
     if (do_save_seed) {
        /* 10 bytes for number, please dot, extention and null terminator. */

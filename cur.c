@@ -6,6 +6,8 @@
 
 #include "dungeon.h"
 #include "move.h"
+#include "pc.h"
+#include "npc.h"
 
 void render_dungeon_curs(dungeon_t *d){
   pair_t p;
@@ -13,22 +15,22 @@ void render_dungeon_curs(dungeon_t *d){
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
       if (charpair(p)) {
-	mvaddch(p[dim_y], p[dim_x],charpair(p)->symbol);
+	mvaddch(p[dim_y]+1, p[dim_x],charpair(p)->symbol);
       } else {
         switch (mappair(p)) {
         case ter_wall:
         case ter_wall_immutable:
-	  mvaddch(p[dim_y], p[dim_x], ' ');
+	  mvaddch(p[dim_y]+1, p[dim_x], ' ');
           break;
         case ter_floor:
         case ter_floor_room:
-	  mvaddch(p[dim_y], p[dim_x], '.');
+	  mvaddch(p[dim_y]+1, p[dim_x], '.');
           break;
         case ter_floor_hall:
-	  mvaddch(p[dim_y], p[dim_x], '#');
+	  mvaddch(p[dim_y]+1, p[dim_x], '#');
           break;
         case ter_debug:
-	  mvaddch(p[dim_y], p[dim_x], '*');
+	  mvaddch(p[dim_y]+1, p[dim_x], '*');
           break;
         }
       }
@@ -38,10 +40,22 @@ void render_dungeon_curs(dungeon_t *d){
   refresh();
 }
 
+void print_message(char *mes){
+  int i=0;
+  while(mes[i]){
+    mvaddch(0, i, mes[i++]);
+  }
+}
+
+void clear_message(){
+  move(0, 0);
+  clrtoeol();
+}
+
 void run_curses(dungeon_t *d){
   int ch;
   pair_t next;
-  while(1){
+  while(pc_is_alive(d) && dungeon_has_npcs(d)){
     if((ch = getch()) != ERR){
       switch(ch){
       case 'q':
@@ -104,11 +118,15 @@ void run_curses(dungeon_t *d){
 	if(ch == 5){
 	  do_moves(d);
 	  render_dungeon_curs(d);
+	  clear_message();
 	}
 	else if(hardnesspair(next) ==0){
 	  move_character(d, &d->pc, next);
 	  do_moves(d);
 	  render_dungeon_curs(d);
+	  clear_message();
+	} else{
+	  print_message("There is a wall in the way!");
 	}
 	ch = 0;
       }
