@@ -8,8 +8,9 @@
 #include "move.h"
 #include "pc.h"
 #include "npc.h"
+#include "utils.h"
 
-void render_dungeon_curs(dungeon_t *d){
+void render_dungeon_curs(dungeon_t *d, pair_t stair_up, pair_t stair_down){
   pair_t p;
   
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
@@ -17,23 +18,35 @@ void render_dungeon_curs(dungeon_t *d){
       if (charpair(p)) {
 	mvaddch(p[dim_y]+1, p[dim_x],charpair(p)->symbol);
       } else {
-        switch (mappair(p)) {
-        case ter_wall:
-        case ter_wall_immutable:
-	  mvaddch(p[dim_y]+1, p[dim_x], ' ');
-          break;
-        case ter_floor:
-        case ter_floor_room:
-	  mvaddch(p[dim_y]+1, p[dim_x], '.');
-          break;
-        case ter_floor_hall:
-	  mvaddch(p[dim_y]+1, p[dim_x], '#');
-          break;
-        case ter_debug:
-	  mvaddch(p[dim_y]+1, p[dim_x], '*');
-          break;
-        }
+	if(p[dim_x] == stair_up[dim_x]){
+	  if(p[dim_y] == stair_up[dim_y]){
+	    mvaddch(p[dim_y] +1, p[dim_x], '<');
+	  }
+	}
+	else if(p[dim_x] == stair_down[dim_x]){
+	  if(p[dim_y] == stair_down[dim_y]){
+	    mvaddch(p[dim_y] +1, p[dim_x], '>'); 
+	  }
+	}
+	else
+	  switch (mappair(p)) {
+	  case ter_wall:
+	  case ter_wall_immutable:
+	    mvaddch(p[dim_y]+1, p[dim_x], ' ');
+	    break;
+	  case ter_floor:
+	  case ter_floor_room:
+	    mvaddch(p[dim_y]+1, p[dim_x], '.');
+	    break;
+	  case ter_floor_hall:
+	    mvaddch(p[dim_y]+1, p[dim_x], '#');
+	    break;
+	  case ter_debug:
+	    mvaddch(p[dim_y]+1, p[dim_x], '*');
+	    break;
+	  }
       }
+      
     }
   }
 
@@ -56,9 +69,8 @@ void clear_message(){
 
 
 
-void mon_menu(dungeon_t *d){
+void mon_menu(dungeon_t *d, pair_t stair_up, pair_t stair_down){
   clear_message();
-
 
   pair_t p;
 
@@ -66,7 +78,6 @@ void mon_menu(dungeon_t *d){
 
   int size = 0;
 
-  endwin();
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) 
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++)
       if (charpair(p)) 
@@ -114,13 +125,33 @@ void mon_menu(dungeon_t *d){
   free(list);
   while(getch() != 27);
   clear();
-  render_dungeon_curs(d);
+  render_dungeon_curs(d, stair_up, stair_down);
 }
 
 void run_curses(dungeon_t *d){
   int ch;
-  pair_t next;
-  while(pc_is_alive(d) && dungeon_has_npcs(d)){
+  uint32_t room;
+  pair_t next, stair_up, stair_down;
+
+  room = rand_range(1, d->num_rooms - 1);
+  stair_up[dim_y] = rand_range(d->rooms[room].position[dim_y],
+			(d->rooms[room].position[dim_y] +
+			 d->rooms[room].size[dim_y] - 1));
+  stair_up[dim_x] = rand_range(d->rooms[room].position[dim_x],
+			(d->rooms[room].position[dim_x] +
+			 d->rooms[room].size[dim_x] - 1));
+
+  room = rand_range(1, d->num_rooms - 1);
+  stair_down[dim_y] = rand_range(d->rooms[room].position[dim_y],
+			       (d->rooms[room].position[dim_y] +
+				d->rooms[room].size[dim_y] - 1));
+  stair_down[dim_x] = rand_range(d->rooms[room].position[dim_x],
+			       (d->rooms[room].position[dim_x] +
+				d->rooms[room].size[dim_x] - 1));
+  
+  render_dungeon_curs(d, stair_up, stair_down);
+  
+  while(pc_is_alive(d)&& dungeon_has_npcs(d)){
     if((ch = getch()) != ERR){
       switch(ch){
       case 'q':
@@ -179,21 +210,42 @@ void run_curses(dungeon_t *d){
 	break;
       }
       if(ch){
-	if(ch == 'q')
+	if(ch == 'q'){
+	  d->pc.alive = 0;
 	  break;
+	}
 	if(ch == 'm'){
-	  mon_menu(d);
+	  mon_menu(d, stair_up, stair_down);
 	  continue;
 	}
+	
+	if(ch == ',' || ch == '<'){
+	  pair_t pos;
+	  pos[dim_x]= d->pc.position[dim_x];
+	  pos[dim_y]= d->pc.position[dim_y];
+	  if(pos[dim_x] == stair_up[dim_x])
+	    if(pos[dim_y] == stair_up[dim_y])
+	      break;
+	}
+	if(ch == '.' || ch == '>'){
+	  pair_t pos;
+	  pos[dim_x]= d->pc.position[dim_x];
+	  pos[dim_y]= d->pc.position[dim_y];
+	  if(pos[dim_x] == stair_down[dim_x])
+	    if(pos[dim_y] == stair_down[dim_y])
+	      break;
+	}
+	
 	if(ch == 5){
 	  do_moves(d);
-	  render_dungeon_curs(d);
+	  render_dungeon_curs(d, stair_up, stair_down);
 	  clear_message();
 	}
+	
 	else if(hardnesspair(next) ==0){
 	  move_character(d, &d->pc, next);
 	  do_moves(d);
-	  render_dungeon_curs(d);
+	  render_dungeon_curs(d, stair_up, stair_down);
 	  clear_message();
 	} else{
 	  print_message("There is a wall in the way!");
@@ -214,6 +266,5 @@ void init_curses(dungeon_t *d){
   curs_set(0);
   keypad(stdscr, TRUE);
   
-  render_dungeon_curs(d);
   
 }

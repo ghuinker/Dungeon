@@ -203,24 +203,40 @@ int main(int argc, char *argv[])
   }
   srand(seed);
 
-  init_dungeon(&d);
 
+
+  int generate = 0;
+  
   if (do_load) {
+      init_dungeon(&d);
     read_dungeon(&d, load_file);
   } else if (do_image) {
+      init_dungeon(&d);
     read_pgm(&d, pgm_file);
   } else {
-    gen_dungeon(&d);
+    generate = 1;
   }
 
   /* Ignoring PC position in saved dungeons.  Not a bug. */
-  config_pc(&d);
-  gen_monsters(&d);
+  //config_pc(&d);
+  //gen_monsters(&d);
 
   init_curses(&d);
-  run_curses(&d);
 
-  delete_dungeon(&d);
+  do{
+    if(generate){
+      init_dungeon(&d);
+      gen_dungeon(&d);
+    }
+    config_pc(&d);
+    gen_monsters(&d);
+    generate = 1;
+    run_curses(&d);
+    delete_dungeon(&d);
+
+  } while(pc_is_alive(&d) && dungeon_has_npcs(&d));
+
+  //delete_dungeon(&d);
 
     
   if (do_save) {
