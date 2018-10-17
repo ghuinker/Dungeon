@@ -1,1 +1,1 @@
-All Code was written in C, and all requirements from previous homework assignments are met. Monsters are spawned on the map, and move according to speed given to monster. The map is updated, and only tunneling monsters can tunnel. 
+All Code was written in C, and all requirements from previous homework assignments are met. Character moves based on given template. Monster menu pops up, and stairs brings pc to another map. 

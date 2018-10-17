@@ -12,6 +12,7 @@
 
 void render_dungeon_curs(dungeon_t *d, pair_t stair_up, pair_t stair_down){
   pair_t p;
+  clear();
   
   for (p[dim_y] = 0; p[dim_y] < DUNGEON_Y; p[dim_y]++) {
     for (p[dim_x] = 0; p[dim_x] < DUNGEON_X; p[dim_x]++) {
@@ -225,7 +226,7 @@ void run_curses(dungeon_t *d){
 	  pos[dim_y]= d->pc.position[dim_y];
 	  if(pos[dim_x] == stair_up[dim_x])
 	    if(pos[dim_y] == stair_up[dim_y])
-	      break;
+	      return;
 	}
 	if(ch == '.' || ch == '>'){
 	  pair_t pos;
@@ -233,7 +234,7 @@ void run_curses(dungeon_t *d){
 	  pos[dim_y]= d->pc.position[dim_y];
 	  if(pos[dim_x] == stair_down[dim_x])
 	    if(pos[dim_y] == stair_down[dim_y])
-	      break;
+	      return;
 	}
 	
 	if(ch == 5){
