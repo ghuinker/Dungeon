@@ -97,9 +97,11 @@ void mon_menu(dungeon_t *d){
 	  else
 	    strcpy(hor, "East");
 	
-	  sprintf(loc, "%d %s and %d %s\n", abs(dist_y), vert, abs(dist_x), hor);
-	  memcpy(list+size, loc, 22);
-	  size = size + 22;
+	  sprintf(loc, "%d %s and %d %s", abs(dist_y), vert, abs(dist_x), hor);
+
+	  
+	  memcpy(list+size, loc, strlen(loc));
+	  size = size + strlen(loc);
 	}
     
   printf("%s\n", menu);

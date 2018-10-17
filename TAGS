@@ -30,8 +30,8 @@ void render_dungeon_curs(12,174
 void print_message(45,900
 void clear_message(52,995
 void mon_menu(59,1050
-void run_curses(113,2149
-void init_curses(198,3813
+void run_curses(115,2170
+void init_curses(200,3834
 
 cur.h,23
 # define CURSES_H2,17
