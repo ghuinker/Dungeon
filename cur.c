@@ -112,9 +112,7 @@ void mon_menu(dungeon_t *d){
   }
 
   free(list);
-  while(!getch()){
-
-  }
+  while(getch() != 27);
   clear();
   render_dungeon_curs(d);
 }
