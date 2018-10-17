@@ -115,10 +115,8 @@ void mon_menu(dungeon_t *d){
   while(!getch()){
 
   }
-  endwin();
-  exit(1);
-  
   clear();
+  render_dungeon_curs(d);
 }
 
 void run_curses(dungeon_t *d){
@@ -128,6 +126,7 @@ void run_curses(dungeon_t *d){
     if((ch = getch()) != ERR){
       switch(ch){
       case 'q':
+      case 'm':
 	break;
       case '5':
       case ' ':
@@ -184,6 +183,10 @@ void run_curses(dungeon_t *d){
       if(ch){
 	if(ch == 'q')
 	  break;
+	if(ch == 'm'){
+	  mon_menu(d);
+	  continue;
+	}
 	if(ch == 5){
 	  do_moves(d);
 	  render_dungeon_curs(d);
@@ -212,7 +215,6 @@ void init_curses(dungeon_t *d){
   noecho();
   curs_set(0);
   keypad(stdscr, TRUE);
-  mon_menu(d);
   
   render_dungeon_curs(d);
   
