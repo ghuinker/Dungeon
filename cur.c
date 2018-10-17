@@ -61,8 +61,6 @@ void mon_menu(dungeon_t *d){
 
 
   pair_t p;
-  
-  char *menu = "Monster Menu";
 
   char *list = malloc(34 * d->num_monsters);
 
@@ -97,18 +95,29 @@ void mon_menu(dungeon_t *d){
 	  else
 	    strcpy(hor, "East");
 	
-	  sprintf(loc, "%d %s and %d %s", abs(dist_y), vert, abs(dist_x), hor);
+	  sprintf(loc, "%d %s and %d %s\n", abs(dist_y), vert, abs(dist_x), hor);
 
 	  
 	  memcpy(list+size, loc, strlen(loc));
 	  size = size + strlen(loc);
 	}
-    
-  printf("%s\n", menu);
-  printf("%s\n", list);
+
+  int i=0, j=0, k=0;
+  while(list[i]){
+    mvaddch(j, k++, list[i]);
+    if(list[i++] == '\n'){
+      j++;
+      k=0;
+    }
+  }
 
   free(list);
+  while(!getch()){
+
+  }
+  endwin();
   exit(1);
+  
   clear();
 }
 
@@ -198,14 +207,12 @@ void run_curses(dungeon_t *d){
 
 
 void init_curses(dungeon_t *d){
-
-  mon_menu(d);
   initscr();
   raw();
   noecho();
   curs_set(0);
   keypad(stdscr, TRUE);
-  
+  mon_menu(d);
   
   render_dungeon_curs(d);
   
