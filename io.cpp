@@ -11,13 +11,13 @@
 #include "dungeon.h"
 
 /* Same ugly hack we did in path.c */
-static dungeon_t *dungeon;
+static dungeon *dungeon;
 
-typedef struct io_message {
+class io_message {
   /* Will print " --more-- " at end of line when another message follows. *
    * Leave 10 extra spaces for that.                                      */
   char msg[71];
-  struct io_message *next;
+  class io_message *next;
 } io_message_t;
 
 static io_message_t *io_head, *io_tail;
@@ -56,7 +56,7 @@ void io_queue_message(const char *format, ...)
   io_message_t *tmp;
   va_list ap;
 
-  if (!(tmp = malloc(sizeof (*tmp)))) {
+  if (!(tmp = (io_message_t *) malloc(sizeof (*tmp)))) {
     perror("malloc");
     exit(1);
   }
@@ -97,7 +97,7 @@ static void io_print_message_queue(uint32_t y, uint32_t x)
   io_tail = NULL;
 }
 
-void io_display_tunnel(dungeon_t *d)
+void io_display_tunnel(dungeon *d)
 {
   uint32_t y, x;
   clear();
@@ -108,14 +108,14 @@ void io_display_tunnel(dungeon_t *d)
       } else if (hardnessxy(x, y) == 255) {
         mvaddch(y + 1, x, '*');
       } else {
-        mvaddch(y + 1, x, '0' + (d->pc_tunnel[y][x] % 10));
+        mvaddch(y + 1, x, '0' + (d->pcunnel[y][x] % 10));
       }
     }
   }
   refresh();
 }
 
-void io_display_distance(dungeon_t *d)
+void io_display_distance(dungeon *d)
 {
   uint32_t y, x;
   clear();
@@ -136,7 +136,7 @@ void io_display_distance(dungeon_t *d)
 static char hardness_to_char[] =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-void io_display_hardness(dungeon_t *d)
+void io_display_hardness(dungeon *d)
 {
   uint32_t y, x;
   clear();
@@ -158,19 +158,19 @@ void io_display_hardness(dungeon_t *d)
 
 static int compare_monster_distance(const void *v1, const void *v2)
 {
-  const character_t *const *c1 = v1;
-  const character_t *const *c2 = v2;
+  const character *const *c1 = v1;
+  const character *const *c2 = v2;
 
   return (dungeon->pc_distance[(*c1)->position[dim_y]][(*c1)->position[dim_x]] -
           dungeon->pc_distance[(*c2)->position[dim_y]][(*c2)->position[dim_x]]);
 }
 
-static character_t *io_nearest_visible_monster(dungeon_t *d)
+static character *io_nearest_visible_monster(dungeon *d)
 {
-  character_t **c, *n;
+  character **c, *n;
   uint32_t x, y, count, i;
 
-  c = malloc(d->num_monsters * sizeof (*c));
+  c = (character **) malloc(d->num_monsters * sizeof (*c));
 
   /* Get a linear list of monsters */
   for (count = 0, y = 1; y < DUNGEON_Y - 1; y++) {
@@ -197,10 +197,10 @@ static character_t *io_nearest_visible_monster(dungeon_t *d)
   return n;
 }
 
-void io_display(dungeon_t *d)
+void io_display(dungeon *d)
 {
   uint32_t y, x;
-  character_t *c;
+  character *c;
 
   clear();
   for (y = 0; y < 21; y++) {
@@ -259,14 +259,14 @@ void io_display(dungeon_t *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-           
+
 
   io_print_message_queue(0, 0);
 
   refresh();
 }
 
-void io_display_monster_list(dungeon_t *d)
+void io_display_monster_list(dungeon *d)
 {
   mvprintw(11, 33, " HP:    XXXXX ");
   mvprintw(12, 33, " Speed: XXXXX ");
@@ -275,10 +275,10 @@ void io_display_monster_list(dungeon_t *d)
   getch();
 }
 
-uint32_t io_teleport_pc(dungeon_t *d)
+uint32_t io_teleport_pc(dungeon *d)
 {
   /* Just for fun. */
-  pair_t dest;
+  pair dest;
 
   do {
     dest[dim_x] = rand_range(1, DUNGEON_X - 2);
@@ -363,14 +363,14 @@ static void io_scroll_monster_list(char (*s)[40], uint32_t count)
   }
 }
 
-static void io_list_monsters_display(dungeon_t *d,
-                                     character_t **c,
+static void io_list_monsters_display(dungeon *d,
+                                     character **c,
                                      uint32_t count)
 {
   uint32_t i;
   char (*s)[40]; /* pointer to array of 40 char */
 
-  s = malloc(count * sizeof (*s));
+  s = (char *) malloc(count * sizeof (*s));
 
   mvprintw(3, 19, " %-40s ", "");
   /* Borrow the first element of our array for this string: */
@@ -412,12 +412,12 @@ static void io_list_monsters_display(dungeon_t *d,
   free(s);
 }
 
-static void io_list_monsters(dungeon_t *d)
+static void io_list_monsters(dungeon *d)
 {
-  character_t **c;
+  character **c;
   uint32_t x, y, count;
 
-  c = malloc(d->num_monsters * sizeof (*c));
+  c = (character **) malloc(d->num_monsters * sizeof (*c));
 
   /* Get a linear list of monsters */
   for (count = 0, y = 1; y < DUNGEON_Y - 1; y++) {
@@ -440,7 +440,7 @@ static void io_list_monsters(dungeon_t *d)
   io_display(d);
 }
 
-void io_handle_input(dungeon_t *d)
+void io_handle_input(dungeon *d)
 {
   uint32_t fail_code;
   int key;

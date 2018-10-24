@@ -22,24 +22,24 @@ int32_t compare_events(const void *event1, const void *event2)
 
 }
 
-event_t *new_event(dungeon_t *d, event_type_t t, void *v, uint32_t delay)
+event_t *new_event(dungeon *d, event_type_t t, void *v, uint32_t delay)
 {
   event_t *e;
 
-  e = malloc(sizeof (*e));
+  e = (event *) malloc(sizeof (*e));
 
   e->type = t;
   e->time = d->time + delay;
   e->sequence = next_event_number();
   switch (t) {
-  case event_character_turn:
+  case event_characterurn:
     e->c = v;
   }
 
   return e;
 }
 
-event_t *update_event(dungeon_t *d, event_t *e, uint32_t delay)
+event_t *update_event(dungeon *d, event_t *e, uint32_t delay)
 {
   e->time = d->time + delay;
   e->sequence = next_event_number();
@@ -52,7 +52,7 @@ void event_delete(void *e)
   event_t *event = e;
 
   switch (event->type) {
-  case event_character_turn:
+  case event_characterurn:
     character_delete(event->c);
     break;
   }

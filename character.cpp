@@ -9,7 +9,7 @@
 void character_delete(void *v)
 {
   /* The PC is never malloc()ed anymore, do don't attempt to free it here. */
-  character_t *c;
+  character *c;
 
   if (v) {
     c = v;
@@ -21,7 +21,7 @@ void character_delete(void *v)
   }
 }
 
-uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
+uint32_t can_see(dungeon *d, character *voyeur, character *exhibitionist)
 {
   /* Application of Bresenham's Line Drawing Algorithm.  If we can draw *
    * a line from v to e without intersecting any walls, then v can see  *
@@ -31,8 +31,8 @@ uint32_t can_see(dungeon_t *d, character_t *voyeur, character_t *exhibitionist)
    * going to ignore for now.  Algorithms that are symmetrical are far  *
    * more expensive.                                                    */
 
-  pair_t first, second;
-  pair_t del, f;
+  pair first, second;
+  pair del, f;
   int16_t a, b, c, i;
 
   first[dim_x] = voyeur->position[dim_x];
