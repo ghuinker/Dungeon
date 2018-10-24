@@ -5,6 +5,7 @@
 #include "npc.h"
 #include "pc.h"
 #include "dungeon.h"
+#include "event.h"
 
 void character_delete(void *v)
 {
@@ -12,7 +13,7 @@ void character_delete(void *v)
   character_t *c;
 
   if (v) {
-    c = v;
+    c = (character_t*) v;
 
     if (c->npc) {
       npc_delete(c->npc);
