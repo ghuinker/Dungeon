@@ -4,10 +4,11 @@
 # include <stdint.h>
 
 # include "dims.h"
+# include "character.h"
 
 typedef class dungeon dungeon_t;
 
-typedef class pc {
+typedef class pc : public character{
   public:
 } pc_t;
 
