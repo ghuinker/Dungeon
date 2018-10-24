@@ -1,25 +1,29 @@
 
-character.h,548
+character.h,651
 # define CHARACTER_H2,20
-typedef class dungeon dungeon_t;8,84
-typedef class npc npc_t;9,117
-typedef class pc pc_t;10,142
-typedef class dice_t dice_t;11,165
-typedef enum kill_type 13,195
-  kill_direct,14,220
-  kill_avenged,15,235
-  num_kill_types16,251
-} kill_type_t;17,268
-typedef class character 19,284
-  char symbol;21,318
-  pair_t position;22,333
-  int32_t speed;23,352
-  uint32_t alive;24,369
-  uint32_t sequence_number;32,934
-  npc_t *npc;npc33,962
-  pc_t *pc;pc34,976
-  uint32_t kills[kills35,988
-} character_t;36,1022
+#define DUNGEON_X 8,84
+#define DUNGEON_Y 9,118
+typedef class dungeon dungeon_t;11,153
+typedef class npc npc_t;12,186
+typedef class pc pc_t;13,211
+typedef class dice_t dice_t;14,234
+typedef enum kill_type 16,264
+  kill_direct,17,289
+  kill_avenged,18,304
+  num_kill_types19,320
+} kill_type_t;20,337
+typedef class character 22,353
+  char symbol;24,387
+  pair_t position;25,402
+  int32_t speed;26,421
+  uint32_t alive;27,438
+  uint32_t sequence_number;35,1003
+  npc_t *npc;npc36,1031
+  pc_t *pc;pc37,1045
+  uint32_t kills[kills38,1057
+  char map[map39,1091
+  bool no_fog 40,1125
+} character_t;41,1148
 
 dims.h,147
 # define DIMS_H2,15
@@ -191,11 +195,11 @@ path.h,92
 # define HARDNESS_PER_TURN 4,32
 typedef class dungeon dungeon_t;6,63
 
-pc.h,97
+pc.h,99
 # define PC_H2,13
-typedef class dungeon dungeon_t;9,94
-typedef class pc 11,128
-} pc_t;13,175
+typedef class dungeon dungeon_t;10,116
+typedef class pc 12,150
+} pc_t;15,198
 
 utils.h,77
 # define UTILS_H2,16

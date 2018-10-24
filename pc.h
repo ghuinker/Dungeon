@@ -5,11 +5,13 @@
 
 # include "dims.h"
 # include "character.h"
+# include "dungeon.h"
 
 typedef class dungeon dungeon_t;
 
 typedef class pc : public character{
   public:
+
 } pc_t;
 
 void pc_delete(pc_t *pc);

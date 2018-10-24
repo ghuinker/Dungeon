@@ -198,46 +198,99 @@ static character_t *io_nearest_visible_monster(dungeon_t *d)
   return n;
 }
 
-void io_display(dungeon_t *d)
-{
-  uint32_t y, x;
-  character_t *c;
-
-  clear();
-  for (y = 0; y < 21; y++) {
-    for (x = 0; x < 80; x++) {
+void update_pc_view(dungeon_t *d){
+  int y, x;
+  for(y=d->pc.position[dim_y]-3; y<d->pc.position[dim_y]+3; y++){
+    for(x=d->pc.position[dim_x]-3; x<d->pc.position[dim_x]+3; x++){
       if (d->character[y][x]) {
-        mvaddch(y + 1, x, d->character[y][x]->symbol);
+        d->pc.map[y][x] = d->character[y][x]->symbol;
       } else {
         switch (mapxy(x, y)) {
         case ter_wall:
         case ter_wall_immutable:
-          mvaddch(y + 1, x, ' ');
+          d->pc.map[y][x] = ' ';
           break;
         case ter_floor:
         case ter_floor_room:
-          mvaddch(y + 1, x, '.');
+          d->pc.map[y][x] = '.';
           break;
         case ter_floor_hall:
-          mvaddch(y + 1, x, '#');
+          d->pc.map[y][x] = '#';
           break;
         case ter_debug:
-          mvaddch(y + 1, x, '*');
+          d->pc.map[y][x] = '*';
           break;
         case ter_stairs_up:
-          mvaddch(y + 1, x, '<');
+          d->pc.map[y][x] = '<';
           break;
         case ter_stairs_down:
-          mvaddch(y + 1, x, '>');
+        d->pc.map[y][x] = '>';
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
-          mvaddch(y + 1, x, '0');
+          d->pc.map[y][x] = ' ';
+          break;
         }
       }
     }
   }
+}
+
+void io_display_full(dungeon_t *d){
+  uint32_t y, x;
+    clear();
+    for (y = 0; y < 21; y++) {
+      for (x = 0; x < 80; x++) {
+        if (d->character[y][x]) {
+          mvaddch(y + 1, x, d->character[y][x]->symbol);
+        } else {
+          switch (mapxy(x, y)) {
+          case ter_wall:
+          case ter_wall_immutable:
+            mvaddch(y + 1, x, ' ');
+            break;
+          case ter_floor:
+          case ter_floor_room:
+            mvaddch(y + 1, x, '.');
+            break;
+          case ter_floor_hall:
+            mvaddch(y + 1, x, '#');
+            break;
+          case ter_debug:
+            mvaddch(y + 1, x, '*');
+            break;
+          case ter_stairs_up:
+            mvaddch(y + 1, x, '<');
+            break;
+          case ter_stairs_down:
+            mvaddch(y + 1, x, '>');
+            break;
+          default:
+   /* Use zero as an error symbol, since it stands out somewhat, and it's *
+    * not otherwise used.                                                 */
+    mvaddch(y+1, x, '*');
+          }
+        }
+      }
+    }
+
+
+}
+
+void io_display(dungeon_t *d)
+{
+  uint32_t y, x;
+  character_t *c;
+  if(!d->pc.no_fog){
+  update_pc_view(d);
+  clear();
+  for (y = 0; y < 21; y++) {
+    for (x = 0; x < 80; x++) {
+      mvaddch(y+1, x, d->pc.map[y][x]);
+    }
+  }
+} else{
+  io_display_full(d);
+}
 
   mvprintw(23, 1, "PC position is (%2d,%2d).",
            d->pc.position[dim_x], d->pc.position[dim_y]);
@@ -531,6 +584,14 @@ void io_handle_input(dungeon_t *d)
     case 'g':
       /* Teleport the PC to a random place in the dungeon.              */
       io_teleport_pc(d);
+      fail_code = 0;
+      break;
+    case 'f':
+      /* Show Full Dungeon              */
+      if(d->pc.no_fog)
+        d->pc.no_fog = false;
+        else
+        d->pc.no_fog = true;
       fail_code = 0;
       break;
     case 'm':

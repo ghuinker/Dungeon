@@ -5,6 +5,9 @@
 
 # include "dims.h"
 
+#define DUNGEON_X              80
+#define DUNGEON_Y              21
+
 typedef class dungeon dungeon_t;
 typedef class npc npc_t;
 typedef class pc pc_t;
@@ -33,6 +36,8 @@ public:
   npc_t *npc;
   pc_t *pc;
   uint32_t kills[num_kill_types];
+  char map[DUNGEON_Y][DUNGEON_X];
+  bool no_fog = false;
 } character_t;
 
 int32_t compare_characters_by_next_turn(const void *character1,
