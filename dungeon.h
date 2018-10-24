@@ -41,21 +41,23 @@ typedef enum __attribute__ ((__packed__)) terrain_type {
   ter_stairs_down
 } terrain_type_t;
 
-typedef struct room {
+typedef class room {
+  public:
   pair_t position;
   pair_t size;
 } room_t;
 
-typedef struct dungeon {
+typedef class dungeon {
+  public:
   uint32_t num_rooms;
   room_t *rooms;
   terrain_type_t map[DUNGEON_Y][DUNGEON_X];
   /* Since hardness is usually not used, it would be expensive to pull it *
    * into cache every time we need a map cell, so we store it in a        *
-   * parallel array, rather than using a structure to represent the       *
-   * cells.  We may want a cell structure later, but from a performanace  *
+   * parallel array, rather than using a classure to represent the       *
+   * cells.  We may want a cell classure later, but from a performanace  *
    * perspective, it would be a bad idea to ever have the map be part of  *
-   * that structure.  Pathfinding will require efficient use of the map,  *
+   * that classure.  Pathfinding will require efficient use of the map,  *
    * and pulling in unnecessary data with each map cell would add a lot   *
    * of overhead to the memory system.                                    */
   uint8_t hardness[DUNGEON_Y][DUNGEON_X];

@@ -56,8 +56,8 @@ extern "C" {
 /*
 #  define dmalloc(ptr) ({                                                     \
    double t;                                                                  \
-   struct timeval tp;                                                         \
-   struct timezone tzp;                                                       \
+   class timeval tp;                                                         \
+   class timezone tzp;                                                       \
    gettimeofday(&tp, &tzp);                                                   \
    t = (tzp.tz_minuteswest * 60 + tp.tv_sec) * 1.0e6 + (tp.tv_usec) * 1.0;    \
    printf("%p: %.0f %s " __FILE__ ":%u m\n", ptr, t, __FUNCTION__, __LINE__); \
@@ -65,8 +65,8 @@ extern "C" {
 
 #  define dfree(ptr) ({                                                       \
    double t;                                                                  \
-   struct timeval tp;                                                         \
-   struct timezone tzp;                                                       \
+   class timeval tp;                                                         \
+   class timezone tzp;                                                       \
    gettimeofday(&tp, &tzp);                                                   \
    t = (tzp.tz_minuteswest * 60 + tp.tv_sec) * 1.0e6 + (tp.tv_usec) * 1.0;    \
    printf("%p: %.0f %s " __FILE__ ":%u f\n", ptr, t, __FUNCTION__, __LINE__); \
@@ -134,7 +134,7 @@ extern "C" {
   *(b) = _tmp;               \
 })
 
-# define structdup(s) ({                                                  \
+# define classdup(s) ({                                                  \
   typeof (s) _tmp;                                                        \
   _tmp = malloc(sizeof (*(s)));                                           \
   memcpy(_tmp, (s), sizeof (*(s)));                                       \
@@ -177,7 +177,7 @@ extern "C" {
 # endif
 # else /* NIAGARA */
 
-# define structdup(s) \
+# define classdup(s) \
   memcpy(malloc(sizeof (*(s))), (s), sizeof (*(s)))
 
 # endif /* NIAGARA */

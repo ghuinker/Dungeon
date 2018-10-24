@@ -11,7 +11,8 @@
  * is ugly.                                                             */
 static dungeon_t *dungeon;
 
-typedef struct path {
+typedef class path {
+  public:
   heap_node_t *hn;
   uint8_t pos[2];
 } path_t;

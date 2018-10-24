@@ -16,7 +16,8 @@
 
 #define DUMP_HARDNESS_IMAGES 0
 
-typedef struct corridor_path {
+typedef class corridor_path {
+  public:
   heap_node_t *hn;
   uint8_t pos[2];
   uint8_t from[2];
@@ -324,9 +325,10 @@ int gaussian[5][5] = {
   {  1,  4,  7,  4,  1 }
 };
 
-typedef struct queue_node {
+typedef class queue_node {
+  public:
   int x, y;
-  struct queue_node *next;
+  class queue_node *next;
 } queue_node_t;
 
 static int smooth_hardness(dungeon_t *d)
@@ -784,7 +786,7 @@ int read_rooms(dungeon_t *d, FILE *f)
     }
 
 
-    /* After reading each room, we need to reconstruct them in the dungeon. */
+    /* After reading each room, we need to reconclass them in the dungeon. */
     for (y = (uint32_t) d->rooms[i].position[dim_y];
          y < (uint32_t) d->rooms[i].position[dim_y] + d->rooms[i].size[dim_y];
          y++) {
@@ -815,7 +817,7 @@ int read_dungeon(dungeon_t *d, char *file)
   char *home;
   size_t len;
   char *filename;
-  struct stat buf;
+  class stat buf;
 
   if (!file) {
     if (!(home = getenv("HOME"))) {

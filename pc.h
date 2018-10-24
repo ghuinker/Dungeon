@@ -5,9 +5,10 @@
 
 # include "dims.h"
 
-typedef struct dungeon dungeon_t;
+typedef class dungeon dungeon_t;
 
-typedef struct pc {
+typedef class pc {
+  public:
 } pc_t;
 
 void pc_delete(pc_t *pc);
