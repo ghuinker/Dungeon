@@ -101,7 +101,7 @@ extern "C" {
      exit(1);                                                              \
    }                                                                       \
 /*   dmalloc(_tmp);*/                                                      \
-   _tmp;                                                                   \
+  (heap_node*) _tmp;                                                                   \
 })
 
 #  define strdup(s) ({                                                     \
