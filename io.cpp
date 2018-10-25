@@ -14,7 +14,7 @@
 static dungeon_t *dungeon;
 
 typedef class io_message {
-  public:
+public:
   /* Will print " --more-- " at end of line when another message follows. *
    * Leave 10 extra spaces for that.                                      */
   char msg[71];
@@ -224,7 +224,7 @@ void update_pc_view(dungeon_t *d){
           d->pc.map[y][x] = '<';
           break;
         case ter_stairs_down:
-        d->pc.map[y][x] = '>';
+	  d->pc.map[y][x] = '>';
           break;
         default:
           d->pc.map[y][x] = ' ';
@@ -237,41 +237,41 @@ void update_pc_view(dungeon_t *d){
 
 void io_display_full(dungeon_t *d){
   uint32_t y, x;
-    clear();
-    for (y = 0; y < 21; y++) {
-      for (x = 0; x < 80; x++) {
-        if (d->character[y][x]) {
-          mvaddch(y + 1, x, d->character[y][x]->symbol);
-        } else {
-          switch (mapxy(x, y)) {
-          case ter_wall:
-          case ter_wall_immutable:
-            mvaddch(y + 1, x, ' ');
-            break;
-          case ter_floor:
-          case ter_floor_room:
-            mvaddch(y + 1, x, '.');
-            break;
-          case ter_floor_hall:
-            mvaddch(y + 1, x, '#');
-            break;
-          case ter_debug:
-            mvaddch(y + 1, x, '*');
-            break;
-          case ter_stairs_up:
-            mvaddch(y + 1, x, '<');
-            break;
-          case ter_stairs_down:
-            mvaddch(y + 1, x, '>');
-            break;
-          default:
-   /* Use zero as an error symbol, since it stands out somewhat, and it's *
-    * not otherwise used.                                                 */
-    mvaddch(y+1, x, '*');
-          }
-        }
+  clear();
+  for (y = 0; y < 21; y++) {
+    for (x = 0; x < 80; x++) {
+      if (d->character[y][x]) {
+	mvaddch(y + 1, x, d->character[y][x]->symbol);
+      } else {
+	switch (mapxy(x, y)) {
+	case ter_wall:
+	case ter_wall_immutable:
+	  mvaddch(y + 1, x, ' ');
+	  break;
+	case ter_floor:
+	case ter_floor_room:
+	  mvaddch(y + 1, x, '.');
+	  break;
+	case ter_floor_hall:
+	  mvaddch(y + 1, x, '#');
+	  break;
+	case ter_debug:
+	  mvaddch(y + 1, x, '*');
+	  break;
+	case ter_stairs_up:
+	  mvaddch(y + 1, x, '<');
+	  break;
+	case ter_stairs_down:
+	  mvaddch(y + 1, x, '>');
+	  break;
+	default:
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
+	  mvaddch(y+1, x, '*');
+	}
       }
     }
+  }
 
 
 }
@@ -281,16 +281,16 @@ void io_display(dungeon_t *d)
   uint32_t y, x;
   character_t *c;
   if(!d->pc.no_fog){
-  update_pc_view(d);
-  clear();
-  for (y = 0; y < 21; y++) {
-    for (x = 0; x < 80; x++) {
-      mvaddch(y+1, x, d->pc.map[y][x]);
+    update_pc_view(d);
+    clear();
+    for (y = 0; y < 21; y++) {
+      for (x = 0; x < 80; x++) {
+	mvaddch(y+1, x, d->pc.map[y][x]);
+      }
     }
+  } else{
+    io_display_full(d);
   }
-} else{
-  io_display_full(d);
-}
 
   mvprintw(23, 1, "PC position is (%2d,%2d).",
            d->pc.position[dim_x], d->pc.position[dim_y]);
@@ -333,12 +333,132 @@ uint32_t io_teleport_pc(dungeon_t *d)
 {
   /* Just for fun. */
   pair_t dest;
+  dest[0] = d->pc.position[0];
+  dest[1] = d->pc.position[1];
+  int key, move;
+
+  io_display_full(d);
+  refresh();
 
   do {
-    dest[dim_x] = rand_range(1, DUNGEON_X - 2);
-    dest[dim_y] = rand_range(1, DUNGEON_Y - 2);
-  } while (charpair(dest));
+    switch (key = getch()) {
+    case '7':
+    case 'y':
+    case KEY_HOME:
+      move = 7;
+      break;
+    case '8':
+    case 'k':
+    case KEY_UP:
+      move = 8;
+      break;
+    case '9':
+    case 'u':
+    case KEY_PPAGE:
+      move = 9;
+      break;
+    case '6':
+    case 'l':
+    case KEY_RIGHT:
+      move = 6;
+      break;
+    case '3':
+    case 'n':
+    case KEY_NPAGE:
+      move = 3;
+      break;
+    case '2':
+    case 'j':
+    case KEY_DOWN:
+      move = 2;
+      break;
+    case '1':
+    case 'b':
+    case KEY_END:
+      move = 1;
+      break;
+    case '4':
+    case 'h':
+    case KEY_LEFT:
+      move = 4;
+      break;
+    }
 
+    switch (move) {
+    case 1:
+    case 2:
+    case 3:
+      dest[dim_y]++;
+      break;
+    case 4:
+    case 5:
+    case 6:
+      break;
+    case 7:
+    case 8:
+    case 9:
+      dest[dim_y]--;
+      break;
+    }
+    switch (move) {
+    case 1:
+    case 4:
+    case 7:
+      dest[dim_x]--;
+      break;
+    case 2:
+    case 5:
+    case 8:
+      break;
+    case 3:
+    case 6:
+    case 9:
+      dest[dim_x]++;
+      break;
+    }
+
+    int y, x;
+    clear();
+    for (y = 0; y < 21; y++) {
+      for (x = 0; x < 80; x++) {
+	if(y == dest[dim_y] && x == dest[dim_x]){
+	  mvaddch(y+1, x, '*');
+	}
+	else if (d->character[y][x]) {
+	  mvaddch(y + 1, x, d->character[y][x]->symbol);
+	} else {
+	  switch (mapxy(x, y)) {
+	  case ter_wall:
+	  case ter_wall_immutable:
+	    mvaddch(y + 1, x, ' ');
+	    break;
+	  case ter_floor:
+	  case ter_floor_room:
+	    mvaddch(y + 1, x, '.');
+	    break;
+	  case ter_floor_hall:
+	    mvaddch(y + 1, x, '#');
+	    break;
+	  case ter_debug:
+	    mvaddch(y + 1, x, '*');
+	    break;
+	  case ter_stairs_up:
+	    mvaddch(y + 1, x, '<');
+	    break;
+	  case ter_stairs_down:
+	    mvaddch(y + 1, x, '>');
+	    break;
+	  default:
+	    /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	     * not otherwise used.                                                 */
+	    mvaddch(y+1, x, '*');
+	  }
+	}
+}
+}
+  } while (key != 'g');
+
+  //Original
   d->character[d->pc.position[dim_y]][d->pc.position[dim_x]] = NULL;
   d->character[dest[dim_y]][dest[dim_x]] = &d->pc;
 
@@ -402,12 +522,12 @@ static void io_scroll_monster_list(char (*s)[40], uint32_t count)
     switch (getch()) {
     case KEY_UP:
       if (offset) {
-        offset--;
+	offset--;
       }
       break;
     case KEY_DOWN:
       if (offset < (count - 13)) {
-        offset++;
+	offset++;
       }
       break;
     case 27:
@@ -418,8 +538,8 @@ static void io_scroll_monster_list(char (*s)[40], uint32_t count)
 }
 
 static void io_list_monsters_display(dungeon_t *d,
-                                     character_t **c,
-                                     uint32_t count)
+				     character_t **c,
+				     uint32_t count)
 {
   uint32_t i;
   char (*s)[40]; /* pointer to array of 40 char */
@@ -434,16 +554,16 @@ static void io_list_monsters_display(dungeon_t *d,
 
   for (i = 0; i < count; i++) {
     snprintf(s[i], 40, "%16s%c: %2d %s by %2d %s",
-             (c[i]->symbol == 'd' ? "A tenacious " :
-              adjectives[rand() % (sizeof (adjectives) /
-                                   sizeof (adjectives[0]))]),
-             c[i]->symbol,
-             abs(c[i]->position[dim_y] - d->pc.position[dim_y]),
-             ((c[i]->position[dim_y] - d->pc.position[dim_y]) <= 0 ?
-              "North" : "South"),
-             abs(c[i]->position[dim_x] - d->pc.position[dim_x]),
-             ((c[i]->position[dim_x] - d->pc.position[dim_x]) <= 0 ?
-              "West" : "East"));
+	     (c[i]->symbol == 'd' ? "A tenacious " :
+	      adjectives[rand() % (sizeof (adjectives) /
+				   sizeof (adjectives[0]))]),
+	     c[i]->symbol,
+	     abs(c[i]->position[dim_y] - d->pc.position[dim_y]),
+	     ((c[i]->position[dim_y] - d->pc.position[dim_y]) <= 0 ?
+	      "North" : "South"),
+	     abs(c[i]->position[dim_x] - d->pc.position[dim_x]),
+	     ((c[i]->position[dim_x] - d->pc.position[dim_x]) <= 0 ?
+	      "West" : "East"));
     if (count <= 13) {
       /* Handle the non-scrolling case right here. *
        * Scrolling in another function.            */
@@ -459,7 +579,7 @@ static void io_list_monsters_display(dungeon_t *d,
   } else {
     mvprintw(19, 19, " %-40s ", "");
     mvprintw(20, 19, " %-40s ",
-             "Arrows to scroll, escape to continue.");
+	     "Arrows to scroll, escape to continue.");
     io_scroll_monster_list(s, count);
   }
 
@@ -477,7 +597,7 @@ static void io_list_monsters(dungeon_t *d)
   for (count = 0, y = 1; y < DUNGEON_Y - 1; y++) {
     for (x = 1; x < DUNGEON_X - 1; x++) {
       if (d->character[y][x] && d->character[y][x] != &d->pc) {
-        c[count++] = d->character[y][x];
+	c[count++] = d->character[y][x];
       }
     }
   }
@@ -589,9 +709,9 @@ void io_handle_input(dungeon_t *d)
     case 'f':
       /* Show Full Dungeon              */
       if(d->pc.no_fog)
-        d->pc.no_fog = false;
-        else
-        d->pc.no_fog = true;
+	d->pc.no_fog = false;
+      else
+	d->pc.no_fog = true;
       fail_code = 0;
       break;
     case 'm':
@@ -606,16 +726,16 @@ void io_handle_input(dungeon_t *d)
        * figure out why I did it that way.                           */
       io_queue_message("This is the first message.");
       io_queue_message("Since there are multiple messages, "
-                       "you will see \"more\" prompts.");
+		       "you will see \"more\" prompts.");
       io_queue_message("You can use any key to advance through messages.");
       io_queue_message("Normal gameplay will not resume until the queue "
-                       "is empty.");
+		       "is empty.");
       io_queue_message("Long lines will be truncated, not wrapped.");
       io_queue_message("io_queue_message() is variadic and handles "
-                       "all printf() conversion specifiers.");
+		       "all printf() conversion specifiers.");
       io_queue_message("Did you see %s?", "what I did there");
       io_queue_message("When the last message is displayed, there will "
-                       "be no \"more\" prompt.");
+		       "be no \"more\" prompt.");
       io_queue_message("Have fun!  And happy printing!");
       fail_code = 0;
       break;
