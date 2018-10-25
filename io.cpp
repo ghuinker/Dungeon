@@ -382,6 +382,9 @@ uint32_t io_teleport_pc(dungeon_t *d)
     case KEY_LEFT:
       move = 4;
       break;
+    default:
+    move = 0;
+    break;
     }
 
     switch (move) {
@@ -416,6 +419,15 @@ uint32_t io_teleport_pc(dungeon_t *d)
       dest[dim_x]++;
       break;
     }
+
+    if(dest[dim_x] >= DUNGEON_X)
+      dest[dim_x]--;
+    if(dest[dim_y] >= DUNGEON_Y)
+      dest[dim_y]--;
+    if(dest[dim_x] <= 0)
+      dest[dim_x]++;
+    if(dest[dim_y] <= 0)
+      dest[dim_y]++;
 
     int y, x;
     clear();
