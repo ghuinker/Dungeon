@@ -136,6 +136,7 @@ int main(int argc, char *argv[])
       else if(str == "END")
           exit(1);
       desc += str;
+      desc += "\n";
     }
     m.atts[DESC] = desc;
   }
