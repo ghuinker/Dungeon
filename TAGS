@@ -180,7 +180,7 @@ class monster{monster83,3210
   int is_complete(86,3256
   void clear_atts(93,3362
   void print_monster(98,3430
-int main(112,3645
+int main(115,3697
 
 utils.cpp,25
 int makedirectory(9,124

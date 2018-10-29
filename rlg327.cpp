@@ -104,7 +104,10 @@ public:
       if(i==DESC)
         cout<< "DESC\n";
       cout << str;
-      cout << '\n';
+      if(i==DESC)
+        cout<<".\n";
+      else
+        cout << '\n';
     }
   }
 };
