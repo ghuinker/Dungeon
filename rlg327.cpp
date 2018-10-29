@@ -129,9 +129,9 @@ int main(int argc, char *argv[])
     if(str == "BEGIN MONSTER"){
       while (std::getline(in, str)) {
 	first = str.substr(0, str.find(' '));
-	if(first == "NAME")
+	if(first == "NAME" && m.atts[NAME].empty())
 	  m.atts[NAME] = str;
-	else if(first == "DESC"){
+	else if(first == "DESC" && m.atts[DESC].empty()){
     std::string desc = "";
 	  while (std::getline(in, str)) {
       if(str == ".")
@@ -143,19 +143,19 @@ int main(int argc, char *argv[])
     }
     m.atts[DESC] = desc;
   }
-	else if(first == "COLOR")
+	else if(first == "COLOR" && m.atts[COLOR].empty())
 	  m.atts[COLOR] = str;
-	else if(first == "SPEED")
+	else if(first == "SPEED" && m.atts[SPEED].empty())
 	  m.atts[SPEED] = str;
-	else if(first == "ABIL")
+	else if(first == "ABIL" && m.atts[ABIL].empty())
 	  m.atts[ABIL] = str;
-	else if(first == "HP")
+	else if(first == "HP" && m.atts[HP].empty())
 	  m.atts[HP] = str;
-	else if(first == "DAM")
+	else if(first == "DAM" && m.atts[DAM].empty())
 	  m.atts[DAM] = str;
-	else if(first == "SYMB")
+	else if(first == "SYMB" && m.atts[SYMB].empty())
 	  m.atts[SYMB] = str;
-	else if(first == "RRTY")
+	else if(first == "RRTY" && m.atts[RRTY].empty())
 	  m.atts[RRTY] = str;
 	else if(first == "END")
 	  break;

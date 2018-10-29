@@ -1,1 +1,4 @@
-All Code was written in C++, and all requirements from previous homework assignments are met (except for code written in C). Fog of war is implemented with pc holding the array view. Teleporting and toggling fog of war is functional.
+All Code was written in C++, and all requirements from previous homework
+assignments are met (except for code written in C). All fields are present
+within monster and no fields are duplicated. The monsters are then printed from
+parsed data. 
