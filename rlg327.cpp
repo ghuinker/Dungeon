@@ -122,6 +122,9 @@ int main(int argc, char *argv[])
     return 1;
   }
   std::string str;
+  std::getline(in, str);
+  if(str != "RLG327 MONSTER DESCRIPTION 1")
+    exit(0);
   while (std::getline(in, str)) {
     // output the line
     monster m;
