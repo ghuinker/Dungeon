@@ -2,6 +2,10 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 /* Very slow seed: 686846853 */
 
@@ -74,8 +78,96 @@ void usage(char *name)
   exit(-1);
 }
 
+enum mon_atts{NAME, DESC, COLOR, SPEED, ABIL, HP, DAM, SYMB, RRTY};
+
+class monster{
+public:
+  std::string atts[9];
+  int is_complete(){
+    for(std::string s:atts)
+      if(s.empty())
+        return 0;
+    return 1;
+  }
+
+  void clear_atts(){
+    for(std::string s:atts)
+      s = "";
+  }
+
+  void print_monster(){
+    int i;
+    std::string str;
+    cout << '\n';
+    for(i=0; i<9; i++){
+      str = atts[i];
+      if(i==DESC)
+        cout<< "DESC\n";
+      cout << str;
+      cout << '\n';
+    }
+  }
+};
+
 int main(int argc, char *argv[])
 {
+
+  ifstream in("monster_desc.txt");
+
+  if(!in) {
+    cout << "Cannot open input file.\n";
+    return 1;
+  }
+  std::string str;
+  while (std::getline(in, str)) {
+    // output the line
+    monster m;
+    std::string first;
+    if(str == "BEGIN MONSTER"){
+      while (std::getline(in, str)) {
+	first = str.substr(0, str.find(' '));
+	if(first == "NAME")
+	  m.atts[NAME] = str;
+	else if(first == "DESC"){
+    std::string desc = "";
+	  while (std::getline(in, str)) {
+      if(str == ".")
+        break;
+      else if(str == "END")
+          exit(1);
+      desc += str;
+    }
+    m.atts[DESC] = desc;
+  }
+	else if(first == "COLOR")
+	  m.atts[COLOR] = str;
+	else if(first == "SPEED")
+	  m.atts[SPEED] = str;
+	else if(first == "ABIL")
+	  m.atts[ABIL] = str;
+	else if(first == "HP")
+	  m.atts[HP] = str;
+	else if(first == "DAM")
+	  m.atts[DAM] = str;
+	else if(first == "SYMB")
+	  m.atts[SYMB] = str;
+	else if(first == "RRTY")
+	  m.atts[RRTY] = str;
+	else if(first == "END")
+	  break;
+	else
+	  break;
+      }
+      if(m.is_complete())
+	m.print_monster();
+      m.clear_atts();
+    }
+
+    // now we loop back and get the next line in 'str'
+  }
+  return 0;
+
+
   dungeon d;
   time_t seed;
   struct timeval tv;
@@ -88,7 +180,7 @@ int main(int argc, char *argv[])
 
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
-  
+
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
@@ -100,7 +192,7 @@ int main(int argc, char *argv[])
    * to have short and long forms of most switches (assuming you    *
    * don't run out of letters).  For now, we've got plenty.  Long   *
    * forms use whole words and take two dashes.  Short forms use an *
-    * abbreviation after a single dash.  We'll add '--rand' (to     *
+   * abbreviation after a single dash.  We'll add '--rand' (to     *
    * specify a random seed), which will take an argument of it's    *
    * own, and we'll add short forms for all three commands, '-l',   *
    * '-s', and '-r', respectively.  We're also going to allow an    *
@@ -109,8 +201,8 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
- 
- if (argc > 1) {
+
+  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
         if (argv[i][1] == '-') {
@@ -227,7 +319,7 @@ int main(int argc, char *argv[])
 
   if (do_save) {
     if (do_save_seed) {
-       /* 10 bytes for number, please dot, extention and null terminator. */
+      /* 10 bytes for number, please dot, extention and null terminator. */
       save_file = (char *) malloc(18);
       sprintf(save_file, "%ld.rlg327", seed);
     }
