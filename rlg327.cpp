@@ -101,8 +101,6 @@ public:
     cout << '\n';
     for(i=0; i<9; i++){
       str = atts[i];
-      if(i==DESC)
-        cout<< "DESC\n";
       cout << str;
       if(i==DESC)
         cout<<".\n";
@@ -129,11 +127,13 @@ int main(int argc, char *argv[])
     // output the line
     monster m;
     std::string first;
+    std::string sec;
     if(str == "BEGIN MONSTER"){
       while (std::getline(in, str)) {
 	first = str.substr(0, str.find(' '));
+  sec = "TEs";
 	if(first == "NAME" && m.atts[NAME].empty())
-	  m.atts[NAME] = str;
+	  m.atts[NAME] = str.substr(str.find(' ')+1);
 	else if(first == "DESC" && m.atts[DESC].empty()){
     std::string desc = "";
 	  while (std::getline(in, str)) {
@@ -147,19 +147,19 @@ int main(int argc, char *argv[])
     m.atts[DESC] = desc;
   }
 	else if(first == "COLOR" && m.atts[COLOR].empty())
-	  m.atts[COLOR] = str;
+	  m.atts[COLOR] = str.substr(str.find(' ')+1);
 	else if(first == "SPEED" && m.atts[SPEED].empty())
-	  m.atts[SPEED] = str;
+	  m.atts[SPEED] = str.substr(str.find(' ')+1);
 	else if(first == "ABIL" && m.atts[ABIL].empty())
-	  m.atts[ABIL] = str;
+	  m.atts[ABIL] = str.substr(str.find(' ')+1);
 	else if(first == "HP" && m.atts[HP].empty())
-	  m.atts[HP] = str;
+	  m.atts[HP] = str.substr(str.find(' ')+1);
 	else if(first == "DAM" && m.atts[DAM].empty())
-	  m.atts[DAM] = str;
+	  m.atts[DAM] = str.substr(str.find(' ')+1);
 	else if(first == "SYMB" && m.atts[SYMB].empty())
-	  m.atts[SYMB] = str;
+	  m.atts[SYMB] = str.substr(str.find(' ')+1);
 	else if(first == "RRTY" && m.atts[RRTY].empty())
-	  m.atts[RRTY] = str;
+	  m.atts[RRTY] = str.substr(str.find(' ')+1);
 	else if(first == "END")
 	  break;
 	else
