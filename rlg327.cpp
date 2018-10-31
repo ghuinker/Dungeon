@@ -77,7 +77,6 @@ void usage(char *name)
 
   exit(-1);
 }
-enum atts{NAME, DESC, COLOR, SPEED, ABIL, HP, DAM, SYMB, RRTY};
 enum color{RED, GREEN, BLUE, CYAN, YELLOW, MAGENTA, WHITE, BLACK};
 
 class dice{
@@ -89,6 +88,10 @@ public:
   void print_dice(){
     cout << base <<'+'<<dice<<'d'<<sides;
   }
+
+  void clear(){
+    base = dice = sides = 0;
+  }
 };
 
 class monster{
@@ -97,88 +100,153 @@ public:
   std::string desc;
   uint8_t color;
   dice speed;
-  uint32_t abil;
+  uint8_t abil;
   std::string abil_string;
   dice hp;
+  dice dam;
+  char symb;
   uint8_t rrty;
 
-
-  std::string atts[9];
   int is_complete(){
-    for(std::string s:atts)
-      if(s.empty())
-        return 0;
     return 1;
   }
 
   void clear_atts(){
-    for(std::string s:atts)
-      s = "";
+    name = "";
+    desc = "";
+    color = 0;
+    speed.clear();
+    abil = 0;
+    abil_string = "";
+    hp.clear();
+    dam.clear();
+    symb = ' ';
+    rrty = 0;
   }
 
   void add_speed(std::string di_str){
-
+    dice di;
+    std::string plus = "+";
+    std::string d_d = "d";
+    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
+    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
+    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
+    speed = di;
   }
 
-  void add_hpe(std::string di_str){
+  void add_dam(std::string di_str){
+    dice di;
+    std::string plus = "+";
+    std::string d_d = "d";
+    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
+    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
+    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
+    dam = di;
+  }
 
+  void add_hp(std::string di_str){
+    dice di;
+    std::string plus = "+";
+    std::string d_d = "d";
+    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
+    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
+    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
+    hp = di;
   }
 
   void add_color(std::string col){
-    
+    if(col == "RED")
+      color = RED;
+    else if(col == "GREEN")
+      color = GREEN;
+    else if(col == "BLUE")
+      color = BLUE;
+    else if(col == "CYAN")
+      color = CYAN;
+    else if(col == "YELLOW")
+      color = YELLOW;
+    else if(col == "MAGENTA")
+      color = MAGENTA;
+    else if(col == "WHITE")
+      color = WHITE;
+    else if(col == "BLACK")
+      color = BLACK;
   }
 
   void add_abil(std::string abil_str){
-
+    //SMART  TELE  TUNNEL   ERRATIC   PASS  PICKUP  DESTROY   UNIQ  BOSS
+    //0      1     2        3         4     5       6         7     8
+    abil_string = abil_str;
+    if (abil_str.find("SMART") != std::string::npos) {
+      abil |= 1UL << 0;
+    }
+    if (abil_str.find("TELE") != std::string::npos) {
+      abil |= 1UL << 1;
+    }
+    if (abil_str.find("TUNNEL") != std::string::npos) {
+      abil |= 1UL << 2;
+    }
+    if (abil_str.find("ERRATIC") != std::string::npos) {
+      abil |= 1UL << 3;
+    }
+    if (abil_str.find("PASS") != std::string::npos) {
+      abil |= 1UL << 4;
+    }
+    if (abil_str.find("PICKUP") != std::string::npos) {
+      abil |= 1UL << 5;
+    }
+    if (abil_str.find("DESTROY") != std::string::npos) {
+      abil |= 1UL << 6;
+    }
+    if (abil_str.find("UNIQ") != std::string::npos) {
+      abil |= 1UL << 7;
+    }
+    if (abil_str.find("BOSS") != std::string::npos) {
+      abil |= 1UL << 8;
+    }
   }
 
   void print_monster(){
-    cout<<name;
-    cout<<desc;
-    cout<<'.';
+    cout<<name << '\n';
+    cout<<desc<< '\n';
+    cout<<'.'<< '\n';
     switch(color){
-      case RED:
-      cout<<"RED";
+    case RED:
+      cout<<"RED"<< '\n';
       break;
-      case GREEN:
-      cout<<"GREEN";
+    case GREEN:
+      cout<<"GREEN"<< '\n';
       break;
-      case BLUE:
-      cout<<"BLUE";
+    case BLUE:
+      cout<<"BLUE"<< '\n';
       break;
-      case CYAN:
-      cout<<"CYAN";
+    case CYAN:
+      cout<<"CYAN"<< '\n';
       break;
-      case YELLOW:
-      cout<<"YELLOW";
+    case YELLOW:
+      cout<<"YELLOW"<< '\n';
       break;
-      case MAGENTA:
-      cout<<"MAGENTA";
+    case MAGENTA:
+      cout<<"MAGENTA"<< '\n';
       break;
-      case WHITE:
-      cout<<"WHITE";
+    case WHITE:
+      cout<<"WHITE"<< '\n';
       break;
-      case BLACK:
-      cout<<"BLACK";
+    case BLACK:
+      cout<<"BLACK"<< '\n';
       break;
     }
     speed.print_dice();
-    cout<<abil_string;
+    cout << '\n';
+    cout<<abil_string<< '\n';
     hp.print_dice();
-    cout<<rrty;
+    cout << '\n';
+    cout<<rrty<< '\n';
   }
 };
 
 int main(int argc, char *argv[])
 {
-
-  dice di;
-  di.base = 1;
-  di.dice = 2;
-  di.sides = 3;
-  di.print_dice();
-  exit(1);
-
   ifstream in("monster_desc.txt");
 
   if(!in) {
@@ -197,35 +265,32 @@ int main(int argc, char *argv[])
     if(str == "BEGIN MONSTER"){
       while (std::getline(in, str)) {
 	first = str.substr(0, str.find(' '));
-  sec = "TEs";
-	if(first == "NAME" && m.atts[NAME].empty())
-	  m.atts[NAME] = str.substr(str.find(' ')+1);
-	else if(first == "DESC" && m.atts[DESC].empty()){
-    std::string desc = "";
+	if(first == "NAME" && m.name.empty())
+	  m.name = str.substr(str.find(' ')+1);
+	else if(first == "DESC" && m.desc.empty()){
+	  std::string desc = "";
 	  while (std::getline(in, str)) {
-      if(str == ".")
-        break;
-      else if(str == "END")
-          exit(1);
-      desc += str;
-      desc += "\n";
-    }
-    m.atts[DESC] = desc;
-  }
-	else if(first == "COLOR" && m.atts[COLOR].empty())
-	  m.atts[COLOR] = str.substr(str.find(' ')+1);
-	else if(first == "SPEED" && m.atts[SPEED].empty())
-	  m.atts[SPEED] = str.substr(str.find(' ')+1);
-	else if(first == "ABIL" && m.atts[ABIL].empty())
-	  m.atts[ABIL] = str.substr(str.find(' ')+1);
-	else if(first == "HP" && m.atts[HP].empty())
-	  m.atts[HP] = str.substr(str.find(' ')+1);
-	else if(first == "DAM" && m.atts[DAM].empty())
-	  m.atts[DAM] = str.substr(str.find(' ')+1);
-	else if(first == "SYMB" && m.atts[SYMB].empty())
-	  m.atts[SYMB] = str.substr(str.find(' ')+1);
-	else if(first == "RRTY" && m.atts[RRTY].empty())
-	  m.atts[RRTY] = str.substr(str.find(' ')+1);
+	    if(str == ".")
+	      break;
+	    desc += str;
+	    desc += "\n";
+	  }
+	  m.desc = desc;
+	}
+	else if(first == "COLOR")
+	  m.add_color(str.substr(str.find(' ')+1));
+	else if(first == "SPEED")
+	  m.add_speed(str.substr(str.find(' ')+1));
+	else if(first == "ABIL" )
+	  m.add_abil(str.substr(str.find(' ')+1));
+	else if(first == "HP" )
+	  m.add_hp(str.substr(str.find(' ')+1));
+	else if(first == "DAM" )
+	  m.add_dam(str.substr(str.find(' ')+1));
+	else if(first == "SYMB")
+	  m.symb = str.substr(str.find(' ')+1).at(0);
+	else if(first == "RRTY")
+	  m.rrty = atoi(str.substr(str.find(' ')+1).c_str());
 	else if(first == "END")
 	  break;
 	else
@@ -233,6 +298,7 @@ int main(int argc, char *argv[])
       }
       if(m.is_complete())
 	m.print_monster();
+  cout << '\n';
       m.clear_atts();
     }
 
