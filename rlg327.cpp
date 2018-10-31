@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -105,7 +106,7 @@ public:
   dice hp;
   dice dam;
   char symb;
-  uint8_t rrty;
+  int rrty;
 
   int is_complete(){
     return 1;
@@ -208,7 +209,7 @@ public:
 
   void print_monster(){
     cout<<name << '\n';
-    cout<<desc<< '\n';
+    cout<<desc;
     cout<<'.'<< '\n';
     switch(color){
     case RED:
@@ -240,13 +241,17 @@ public:
     cout << '\n';
     cout<<abil_string<< '\n';
     hp.print_dice();
+    cout<<'\n';
+    dam.print_dice();
     cout << '\n';
+    cout<< symb << '\n';
     cout<<rrty<< '\n';
   }
 };
 
 int main(int argc, char *argv[])
 {
+  vector<monster> monster_templates;
   ifstream in("monster_desc.txt");
 
   if(!in) {
@@ -297,12 +302,15 @@ int main(int argc, char *argv[])
 	  break;
       }
       if(m.is_complete())
-	m.print_monster();
-  cout << '\n';
-      m.clear_atts();
+      monster_templates.push_back(m);
     }
 
     // now we loop back and get the next line in 'str'
+  }
+
+  for(monster& mon:monster_templates){
+    mon.print_monster();
+    cout<<'\n';
   }
   return 0;
 

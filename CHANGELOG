@@ -79,3 +79,6 @@ Day 14: 10/29 10:00 - 11:00
 	Filled and printed struct of monster
 	updated Chanagelog and Readme
 	If duplicate attribute, don't print monster
+Day 15: 10/31 16:00 - 18:00
+	Parsing strings into usable info like dice object and ints
+	Updated changelog
