@@ -77,11 +77,32 @@ void usage(char *name)
 
   exit(-1);
 }
+enum atts{NAME, DESC, COLOR, SPEED, ABIL, HP, DAM, SYMB, RRTY};
+enum color{RED, GREEN, BLUE, CYAN, YELLOW, MAGENTA, WHITE, BLACK};
 
-enum mon_atts{NAME, DESC, COLOR, SPEED, ABIL, HP, DAM, SYMB, RRTY};
+class dice{
+public:
+  int base;
+  int dice;
+  int sides;
+
+  void print_dice(){
+    cout << base <<'+'<<dice<<'d'<<sides;
+  }
+};
 
 class monster{
 public:
+  std::string name;
+  std::string desc;
+  uint8_t color;
+  dice speed;
+  uint32_t abil;
+  std::string abil_string;
+  dice hp;
+  uint8_t rrty;
+
+
   std::string atts[9];
   int is_complete(){
     for(std::string s:atts)
@@ -95,23 +116,68 @@ public:
       s = "";
   }
 
+  void add_speed(std::string di_str){
+
+  }
+
+  void add_hpe(std::string di_str){
+
+  }
+
+  void add_color(std::string col){
+    
+  }
+
+  void add_abil(std::string abil_str){
+
+  }
+
   void print_monster(){
-    int i;
-    std::string str;
-    cout << '\n';
-    for(i=0; i<9; i++){
-      str = atts[i];
-      cout << str;
-      if(i==DESC)
-        cout<<".\n";
-      else
-        cout << '\n';
+    cout<<name;
+    cout<<desc;
+    cout<<'.';
+    switch(color){
+      case RED:
+      cout<<"RED";
+      break;
+      case GREEN:
+      cout<<"GREEN";
+      break;
+      case BLUE:
+      cout<<"BLUE";
+      break;
+      case CYAN:
+      cout<<"CYAN";
+      break;
+      case YELLOW:
+      cout<<"YELLOW";
+      break;
+      case MAGENTA:
+      cout<<"MAGENTA";
+      break;
+      case WHITE:
+      cout<<"WHITE";
+      break;
+      case BLACK:
+      cout<<"BLACK";
+      break;
     }
+    speed.print_dice();
+    cout<<abil_string;
+    hp.print_dice();
+    cout<<rrty;
   }
 };
 
 int main(int argc, char *argv[])
 {
+
+  dice di;
+  di.base = 1;
+  di.dice = 2;
+  di.sides = 3;
+  di.print_dice();
+  exit(1);
 
   ifstream in("monster_desc.txt");
 
