@@ -363,6 +363,7 @@ uint32_t io_teleport_pc(dungeon *d)
   int c;
   int actual;
 
+  pc_reset_visibility(d->PC);
   io_display_no_fog(d);
 
   mvprintw(0, 0,
@@ -410,68 +411,68 @@ uint32_t io_teleport_pc(dungeon *d)
     case '7':
     case 'y':
     case KEY_HOME:
-      if (dest[dim_y] != 1) {
+      if (dest[dim_y] > 1) {
         dest[dim_y]--;
       }
-      if (dest[dim_x] != 1) {
+      if (dest[dim_x] > 1) {
         dest[dim_x]--;
       }
       break;
     case '8':
     case 'k':
     case KEY_UP:
-      if (dest[dim_y] != 1) {
+      if (dest[dim_y] > 1) {
         dest[dim_y]--;
       }
       break;
     case '9':
     case 'u':
     case KEY_PPAGE:
-      if (dest[dim_y] != 1) {
+      if (dest[dim_y] > 1) {
         dest[dim_y]--;
       }
-      if (dest[dim_x] != DUNGEON_X - 1) {
+      if (dest[dim_x] < DUNGEON_X - 2) {
         dest[dim_x]++;
       }
       break;
     case '6':
     case 'l':
     case KEY_RIGHT:
-      if (dest[dim_x] != DUNGEON_X - 1) {
+      if (dest[dim_x] < DUNGEON_X - 2) {
         dest[dim_x]++;
       }
       break;
     case '3':
     case 'n':
     case KEY_NPAGE:
-      if (dest[dim_y] != DUNGEON_Y - 1) {
+      if (dest[dim_y] < DUNGEON_Y - 2) {
         dest[dim_y]++;
       }
-      if (dest[dim_x] != DUNGEON_X - 1) {
+      if (dest[dim_x] < DUNGEON_X - 2) {
         dest[dim_x]++;
       }
       break;
     case '2':
     case 'j':
     case KEY_DOWN:
-      if (dest[dim_y] != DUNGEON_Y - 1) {
+      if (dest[dim_y] < DUNGEON_Y - 2) {
         dest[dim_y]++;
       }
       break;
     case '1':
     case 'b':
     case KEY_END:
-      if (dest[dim_y] != DUNGEON_Y - 1) {
+      if (dest[dim_y] < DUNGEON_Y - 2) {
         dest[dim_y]++;
       }
-      if (dest[dim_x] != 1) {
+      if (dest[dim_x] > 1) {
         dest[dim_x]--;
       }
       break;
     case '4':
     case 'h':
     case KEY_LEFT:
-      if (dest[dim_x] != DUNGEON_X - 1) {
+      if (dest[dim_x] > 1) {
         dest[dim_x]--;
       }
       break;
@@ -596,7 +597,7 @@ static void io_list_monsters_display(dungeon *d,
               "North" : "South"),
              abs(c[i]->position[dim_x] - d->PC->position[dim_x]),
              ((c[i]->position[dim_x] - d->PC->position[dim_x]) <= 0 ?
-              "East" : "West"));
+              "West" : "East"));
     if (count <= 13) {
       /* Handle the non-scrolling case right here. *
        * Scrolling in another function.            */

@@ -2,11 +2,6 @@
 #include <string.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <iostream>
-#include <fstream>
-#include <vector>
-
-using namespace std;
 
 /* Very slow seed: 686846853 */
 
@@ -78,243 +73,9 @@ void usage(char *name)
 
   exit(-1);
 }
-enum color{RED, GREEN, BLUE, CYAN, YELLOW, MAGENTA, WHITE, BLACK};
-
-class dice{
-public:
-  int base;
-  int dice;
-  int sides;
-
-  void print_dice(){
-    cout << base <<'+'<<dice<<'d'<<sides;
-  }
-
-  void clear(){
-    base = dice = sides = 0;
-  }
-};
-
-class monster{
-public:
-  std::string name;
-  std::string desc;
-  uint8_t color;
-  dice speed;
-  uint8_t abil;
-  std::string abil_string;
-  dice hp;
-  dice dam;
-  char symb;
-  int rrty;
-
-  int is_complete(){
-    return 1;
-  }
-
-  void clear_atts(){
-    name = "";
-    desc = "";
-    color = 0;
-    speed.clear();
-    abil = 0;
-    abil_string = "";
-    hp.clear();
-    dam.clear();
-    symb = ' ';
-    rrty = 0;
-  }
-
-  void add_speed(std::string di_str){
-    dice di;
-    std::string plus = "+";
-    std::string d_d = "d";
-    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
-    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
-    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
-    speed = di;
-  }
-
-  void add_dam(std::string di_str){
-    dice di;
-    std::string plus = "+";
-    std::string d_d = "d";
-    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
-    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
-    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
-    dam = di;
-  }
-
-  void add_hp(std::string di_str){
-    dice di;
-    std::string plus = "+";
-    std::string d_d = "d";
-    di.base = atoi(di_str.substr(0, di_str.find(plus)).c_str());
-    di.dice = atoi(di_str.substr(di_str.find(plus)+1, di_str.find(d_d)).c_str());
-    di.sides = atoi(di_str.substr(di_str.find(d_d)+1, di_str.length()-1).c_str());
-    hp = di;
-  }
-
-  void add_color(std::string col){
-    if(col == "RED")
-      color = RED;
-    else if(col == "GREEN")
-      color = GREEN;
-    else if(col == "BLUE")
-      color = BLUE;
-    else if(col == "CYAN")
-      color = CYAN;
-    else if(col == "YELLOW")
-      color = YELLOW;
-    else if(col == "MAGENTA")
-      color = MAGENTA;
-    else if(col == "WHITE")
-      color = WHITE;
-    else if(col == "BLACK")
-      color = BLACK;
-  }
-
-  void add_abil(std::string abil_str){
-    //SMART  TELE  TUNNEL   ERRATIC   PASS  PICKUP  DESTROY   UNIQ  BOSS
-    //0      1     2        3         4     5       6         7     8
-    abil_string = abil_str;
-    if (abil_str.find("SMART") != std::string::npos) {
-      abil |= 1UL << 0;
-    }
-    if (abil_str.find("TELE") != std::string::npos) {
-      abil |= 1UL << 1;
-    }
-    if (abil_str.find("TUNNEL") != std::string::npos) {
-      abil |= 1UL << 2;
-    }
-    if (abil_str.find("ERRATIC") != std::string::npos) {
-      abil |= 1UL << 3;
-    }
-    if (abil_str.find("PASS") != std::string::npos) {
-      abil |= 1UL << 4;
-    }
-    if (abil_str.find("PICKUP") != std::string::npos) {
-      abil |= 1UL << 5;
-    }
-    if (abil_str.find("DESTROY") != std::string::npos) {
-      abil |= 1UL << 6;
-    }
-    if (abil_str.find("UNIQ") != std::string::npos) {
-      abil |= 1UL << 7;
-    }
-    if (abil_str.find("BOSS") != std::string::npos) {
-      abil |= 1UL << 8;
-    }
-  }
-
-  void print_monster(){
-    cout<<name << '\n';
-    cout<<desc;
-    cout<<'.'<< '\n';
-    switch(color){
-    case RED:
-      cout<<"RED"<< '\n';
-      break;
-    case GREEN:
-      cout<<"GREEN"<< '\n';
-      break;
-    case BLUE:
-      cout<<"BLUE"<< '\n';
-      break;
-    case CYAN:
-      cout<<"CYAN"<< '\n';
-      break;
-    case YELLOW:
-      cout<<"YELLOW"<< '\n';
-      break;
-    case MAGENTA:
-      cout<<"MAGENTA"<< '\n';
-      break;
-    case WHITE:
-      cout<<"WHITE"<< '\n';
-      break;
-    case BLACK:
-      cout<<"BLACK"<< '\n';
-      break;
-    }
-    speed.print_dice();
-    cout << '\n';
-    cout<<abil_string<< '\n';
-    hp.print_dice();
-    cout<<'\n';
-    dam.print_dice();
-    cout << '\n';
-    cout<< symb << '\n';
-    cout<<rrty<< '\n';
-  }
-};
 
 int main(int argc, char *argv[])
 {
-  vector<monster> monster_templates;
-  ifstream in("monster_desc.txt");
-
-  if(!in) {
-    cout << "Cannot open input file.\n";
-    return 1;
-  }
-  std::string str;
-  std::getline(in, str);
-  if(str != "RLG327 MONSTER DESCRIPTION 1")
-    exit(0);
-  while (std::getline(in, str)) {
-    // output the line
-    monster m;
-    std::string first;
-    std::string sec;
-    if(str == "BEGIN MONSTER"){
-      while (std::getline(in, str)) {
-	first = str.substr(0, str.find(' '));
-	if(first == "NAME" && m.name.empty())
-	  m.name = str.substr(str.find(' ')+1);
-	else if(first == "DESC" && m.desc.empty()){
-	  std::string desc = "";
-	  while (std::getline(in, str)) {
-	    if(str == ".")
-	      break;
-	    desc += str;
-	    desc += "\n";
-	  }
-	  m.desc = desc;
-	}
-	else if(first == "COLOR")
-	  m.add_color(str.substr(str.find(' ')+1));
-	else if(first == "SPEED")
-	  m.add_speed(str.substr(str.find(' ')+1));
-	else if(first == "ABIL" )
-	  m.add_abil(str.substr(str.find(' ')+1));
-	else if(first == "HP" )
-	  m.add_hp(str.substr(str.find(' ')+1));
-	else if(first == "DAM" )
-	  m.add_dam(str.substr(str.find(' ')+1));
-	else if(first == "SYMB")
-	  m.symb = str.substr(str.find(' ')+1).at(0);
-	else if(first == "RRTY")
-	  m.rrty = atoi(str.substr(str.find(' ')+1).c_str());
-	else if(first == "END")
-	  break;
-	else
-	  break;
-      }
-      if(m.is_complete())
-      monster_templates.push_back(m);
-    }
-
-    // now we loop back and get the next line in 'str'
-  }
-
-  for(monster& mon:monster_templates){
-    mon.print_monster();
-    cout<<'\n';
-  }
-  return 0;
-
-
   dungeon d;
   time_t seed;
   struct timeval tv;
@@ -325,9 +86,15 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
 
+  parse_descriptions(&d);
+  print_descriptions(&d);
+  destroy_descriptions(&d);
+
+  return 0;
+
   /* Quiet a false positive from valgrind. */
   memset(&d, 0, sizeof (d));
-
+  
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
@@ -339,7 +106,7 @@ int main(int argc, char *argv[])
    * to have short and long forms of most switches (assuming you    *
    * don't run out of letters).  For now, we've got plenty.  Long   *
    * forms use whole words and take two dashes.  Short forms use an *
-   * abbreviation after a single dash.  We'll add '--rand' (to     *
+    * abbreviation after a single dash.  We'll add '--rand' (to     *
    * specify a random seed), which will take an argument of it's    *
    * own, and we'll add short forms for all three commands, '-l',   *
    * '-s', and '-r', respectively.  We're also going to allow an    *
@@ -348,8 +115,8 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
-
-  if (argc > 1) {
+ 
+ if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
         if (argv[i][1] == '-') {
@@ -466,7 +233,7 @@ int main(int argc, char *argv[])
 
   if (do_save) {
     if (do_save_seed) {
-      /* 10 bytes for number, please dot, extention and null terminator. */
+       /* 10 bytes for number, please dot, extention and null terminator. */
       save_file = (char *) malloc(18);
       sprintf(save_file, "%ld.rlg327", seed);
     }
