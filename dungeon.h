@@ -53,6 +53,16 @@ typedef struct room {
 
 class pc;
 
+class item{
+public:
+  std::string name, description;
+  object_type_t type;
+  uint32_t color;
+  uint32_t hit, damage, dodge, defence, weight, speed, attribute, value;
+  bool artifact;
+  uint32_t rarity;
+};
+
 class dungeon {
  public:
   uint32_t num_rooms;
@@ -70,6 +80,7 @@ class dungeon {
   uint8_t pc_distance[DUNGEON_Y][DUNGEON_X];
   uint8_t pc_tunnel[DUNGEON_Y][DUNGEON_X];
   character *character_map[DUNGEON_Y][DUNGEON_X];
+  item *item_map[DUNGEON_Y][DUNGEON_X];
   pc *PC;
   heap_t events;
   uint16_t num_monsters;

@@ -15,6 +15,7 @@ uint32_t print_descriptions(dungeon_t *d);
 uint32_t destroy_descriptions(dungeon_t *d);
 
 void init_monster(dungeon_t *d, npc *n);
+void init_items(dungeon_t *d);
 
 typedef enum object_type {
   objtype_no_type,
@@ -69,7 +70,7 @@ public:
 };
 
 class object_description {
- private:
+public:
   std::string name, description;
   object_type_t type;
   uint32_t color;

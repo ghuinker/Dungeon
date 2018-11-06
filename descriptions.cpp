@@ -1076,3 +1076,39 @@ void init_monster(dungeon_t *d, npc *n){
   n->symbol = m.symbol;
   n->rarity = m.rarity;
 }
+
+void init_items(dungeon_t *d){
+  uint32_t i;
+  pair_t p;
+  uint32_t room;
+  for(i=0; i<d->num_rooms; i++){
+    do {
+      room = rand_range(1, d->num_rooms - 1);
+      p[dim_y] = rand_range(d->rooms[room].position[dim_y],
+                            (d->rooms[room].position[dim_y] +
+                             d->rooms[room].size[dim_y] - 1));
+      p[dim_x] = rand_range(d->rooms[room].position[dim_x],
+                            (d->rooms[room].position[dim_x] +
+                             d->rooms[room].size[dim_x] - 1));
+    } while (d->character_map[p[dim_y]][p[dim_x]]);
+
+    object_description &m = d->object_descriptions[rand_range(0, d->object_descriptions.size()-1)];
+    item* t = new item;
+    t->name = m.name;
+    t->description = m.description;
+    t->type = m.type;
+    t->color = m.color;
+    t->hit = m.hit.roll();
+    t->damage = m.damage.roll();
+    t->dodge = m.dodge.roll();
+    t->defence = m.defence.roll();
+    t->weight = m.weight.roll();
+    t->speed = m.speed.roll();
+    t->attribute = m.attribute.roll();
+    t->value = m.value.roll();
+    t->artifact = m.artifact;
+    t->rarity = m.rarity;
+
+    d->item_map[p[dim_y]][p[dim_x]] = t;
+  }
+}

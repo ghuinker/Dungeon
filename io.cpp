@@ -205,10 +205,13 @@ void io_display(dungeon *d)
   uint32_t illuminated;
   character *c;
   int32_t visible_monsters;
+  pair_t item_pair;
 
   clear();
   for (visible_monsters = -1, y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
+      item_pair[dim_x] = x;
+      item_pair[dim_y] = y;
       if ((illuminated = is_illuminated(d->PC, y, x))) {
         attron(A_BOLD);
       }
@@ -220,7 +223,13 @@ void io_display(dungeon *d)
         mvaddch(y + 1, x,
                 character_get_symbol(d->character_map[y][x]));
         visible_monsters++;
-      } else {
+      } else if(d->item_map[y][x] &&
+          can_see(d,
+                  character_get_pos(d->PC),
+                  item_pair,
+                  1, 0)) {
+        mvaddch(y+1, x, object_symbol[d->item_map[y][x]->type]);
+      }else {
         switch (pc_learned_terrain(d->PC, y, x)) {
         case ter_wall:
         case ter_wall_immutable:
@@ -276,7 +285,7 @@ void io_display(dungeon *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-  
+
   io_print_message_queue(0, 0);
 
   refresh();
@@ -292,7 +301,9 @@ void io_display_no_fog(dungeon *d)
     for (x = 0; x < 80; x++) {
       if (d->character_map[y][x]) {
         mvaddch(y + 1, x, d->character_map[y][x]->symbol);
-      } else {
+      } else if(d->item_map[y][x]){
+        mvaddch(y+1, x, object_symbol[d->item_map[y][x]->type]);
+      } else{
         switch (mapxy(x, y)) {
         case ter_wall:
         case ter_wall_immutable:
@@ -344,7 +355,7 @@ void io_display_no_fog(dungeon *d)
     mvprintw(22, 55, "NONE.");
     attroff(COLOR_PAIR(COLOR_BLUE));
   }
-  
+
   io_print_message_queue(0, 0);
 }
 
@@ -402,7 +413,7 @@ uint32_t io_teleport_pc(dungeon *d)
         break;
       default:
         break;
-      }      
+      }
     }
 
     mvaddch(dest[dim_y] + 1, dest[dim_x], actual);
@@ -491,7 +502,7 @@ uint32_t io_teleport_pc(dungeon *d)
 
   if (charpair(dest) && charpair(dest) != d->PC) {
     io_queue_message("Teleport failed.  Destination occupied.");
-  } else {  
+  } else {
     d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = NULL;
     d->character_map[dest[dim_y]][dest[dim_x]] = d->PC;
 

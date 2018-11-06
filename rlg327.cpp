@@ -10,6 +10,7 @@
 #include "npc.h"
 #include "move.h"
 #include "io.h"
+#include "descriptions.h"
 
 const char *victory =
   "\n                                       o\n"
@@ -217,7 +218,7 @@ int main(int argc, char *argv[])
   //Generate Monsters Based on Descriptions
   parse_descriptions(&d);
   gen_monsters(&d);
-  gen_objects(&d);
+  init_items(&d);
 
   io_display(&d);
   if (!do_load && !do_image) {
