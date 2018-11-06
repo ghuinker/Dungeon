@@ -217,6 +217,7 @@ int main(int argc, char *argv[])
   //Generate Monsters Based on Descriptions
   parse_descriptions(&d);
   gen_monsters(&d);
+  gen_objects(&d);
 
   io_display(&d);
   if (!do_load && !do_image) {
