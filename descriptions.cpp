@@ -1081,7 +1081,8 @@ void init_items(dungeon_t *d){
   uint32_t i;
   pair_t p;
   uint32_t room;
-  for(i=0; i<d->num_rooms; i++){
+  uint32_t num_items = rand_range(10, 20);
+  for(i=0; i<num_items; i++){
     do {
       room = rand_range(1, d->num_rooms - 1);
       p[dim_y] = rand_range(d->rooms[room].position[dim_y],
