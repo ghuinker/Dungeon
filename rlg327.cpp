@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
    * to have short and long forms of most switches (assuming you    *
    * don't run out of letters).  For now, we've got plenty.  Long   *
    * forms use whole words and take two dashes.  Short forms use an *
-    * abbreviation after a single dash.  We'll add '--rand' (to     *
+   * abbreviation after a single dash.  We'll add '--rand' (to     *
    * specify a random seed), which will take an argument of it's    *
    * own, and we'll add short forms for all three commands, '-l',   *
    * '-s', and '-r', respectively.  We're also going to allow an    *
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
 
- if (argc > 1) {
+  if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
         if (argv[i][1] == '-') {
@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
 
   if (do_save) {
     if (do_save_seed) {
-       /* 10 bytes for number, please dot, extention and null terminator. */
+      /* 10 bytes for number, please dot, extention and null terminator. */
       save_file = (char *) malloc(18);
       sprintf(save_file, "%ld.rlg327", seed);
     }

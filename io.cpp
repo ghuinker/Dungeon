@@ -162,9 +162,9 @@ static int compare_monster_distance(const void *v1, const void *v2)
   const character *const *c2 = (const character *const *) v2;
 
   return (thedungeon->pc_distance[(*c1)->position[dim_y]]
-                                 [(*c1)->position[dim_x]] -
+	  [(*c1)->position[dim_x]] -
           thedungeon->pc_distance[(*c2)->position[dim_y]]
-                                 [(*c2)->position[dim_x]]);
+	  [(*c2)->position[dim_x]]);
 }
 
 static character *io_nearest_visible_monster(dungeon *d)
@@ -220,15 +220,25 @@ void io_display(dungeon *d)
                   character_get_pos(d->PC),
                   character_get_pos(d->character_map[y][x]),
                   1, 0)) {
+                    if(((npc *)d->character_map[y][x])->color.size() >0){
+                    attron(COLOR_PAIR(((npc *)d->character_map[y][x])->color[0]));
         mvaddch(y + 1, x,
                 character_get_symbol(d->character_map[y][x]));
+                attroff(COLOR_PAIR(((npc *)d->character_map[y][x])->color[0]));
+              } else{
+                mvaddch(y + 1, x,
+                        character_get_symbol(d->character_map[y][x]));
+              }
+
         visible_monsters++;
       } else if(d->item_map[y][x] &&
-          can_see(d,
-                  character_get_pos(d->PC),
-                  item_pair,
-                  1, 0)) {
-        mvaddch(y+1, x, object_symbol[d->item_map[y][x]->type]);
+		can_see(d,
+			character_get_pos(d->PC),
+			item_pair,
+			1, 0)) {
+	attron(COLOR_PAIR(d->item_map[y][x]->color));
+	mvaddch(y+1, x, object_symbol[d->item_map[y][x]->type]);
+	attroff(COLOR_PAIR(d->item_map[y][x]->color));
       }else {
         switch (pc_learned_terrain(d->PC, y, x)) {
         case ter_wall:
@@ -253,8 +263,8 @@ void io_display(dungeon *d)
           mvaddch(y + 1, x, '>');
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
           mvaddch(y + 1, x, '0');
         }
       }
@@ -300,9 +310,18 @@ void io_display_no_fog(dungeon *d)
   for (y = 0; y < 21; y++) {
     for (x = 0; x < 80; x++) {
       if (d->character_map[y][x]) {
-        mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+        if(((npc *)d->character_map[y][x])->color.size() >0){
+        attron(COLOR_PAIR(((npc *)d->character_map[y][x])->color[0]));
+  mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+    attroff(COLOR_PAIR(((npc *)d->character_map[y][x])->color[0]));
+  } else{
+      mvaddch(y + 1, x, d->character_map[y][x]->symbol);
+  }
+
       } else if(d->item_map[y][x]){
+        attron(COLOR_PAIR(d->item_map[y][x]->color));
         mvaddch(y+1, x, object_symbol[d->item_map[y][x]->type]);
+        attroff(COLOR_PAIR(d->item_map[y][x]->color));
       } else{
         switch (mapxy(x, y)) {
         case ter_wall:
@@ -326,8 +345,8 @@ void io_display_no_fog(dungeon *d)
           mvaddch(y + 1, x, '>');
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
           mvaddch(y + 1, x, '0');
         }
       }
