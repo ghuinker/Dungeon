@@ -8,6 +8,7 @@
 #include "path.h"
 #include "event.h"
 #include "pc.h"
+#include "descriptions.h"
 
 static uint32_t max_monster_cells(dungeon *d)
 {
@@ -29,7 +30,7 @@ void gen_monsters(dungeon *d)
   npc *m;
   uint32_t room;
   pair_t p;
-  const static char symbol[] = "0123456789abcdef";
+  //const static char symbol[] = "0123456789abcdef";
   uint32_t num_cells;
 
   num_cells = max_monster_cells(d);
@@ -38,7 +39,7 @@ void gen_monsters(dungeon *d)
   for (i = 0; i < d->num_monsters; i++) {
     m = new npc;
     memset(m, 0, sizeof (*m));
-    
+
     do {
       room = rand_range(1, d->num_rooms - 1);
       p[dim_y] = rand_range(d->rooms[room].position[dim_y],
@@ -51,13 +52,22 @@ void gen_monsters(dungeon *d)
     m->position[dim_y] = p[dim_y];
     m->position[dim_x] = p[dim_x];
     d->character_map[p[dim_y]][p[dim_x]] = m;
-    m->speed = rand_range(5, 20);
-    m->alive = 1;
+
+    //Set Attributes of Monster
+    init_monster(d, m);
     m->sequence_number = ++d->character_sequence_number;
-    m->characteristics = rand() & 0x0000000f;
-    /*    m->npc->characteristics = 0xf;*/
-    m->symbol = symbol[m->characteristics];
+    m->alive = 1;
     m->have_seen_pc = 0;
+    /*
+    m->speed = rand_range(5, 20);
+
+    m->characteristics = rand() & 0x0000000f;
+       m->npc->characteristics = 0xf;
+    m->symbol = symbol[m->characteristics];
+
+    */
+
+    //end setting character attributes
     m->kills[kill_direct] = m->kills[kill_avenged] = 0;
 
     d->character_map[p[dim_y]][p[dim_x]] = m;

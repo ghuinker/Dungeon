@@ -121,14 +121,14 @@ static inline void eat_whitespace(std::ifstream &f)
 {
   while (isspace(f.peek())) {
     f.get();
-  }  
+  }
 }
 
 static inline void eat_blankspace(std::ifstream &f)
 {
   while (isblank(f.peek())) {
     f.get();
-  }  
+  }
 }
 
 static uint32_t parse_name(std::ifstream &f,
@@ -1061,4 +1061,18 @@ return o << hit << std::endl << damage << std::endl << dodge << std::endl
 std::ostream &operator<<(std::ostream &o, object_description &od)
 {
   return od.print(o);
+}
+
+
+void init_monster(dungeon_t *d, npc *n){
+  monster_description &m = d->monster_descriptions[rand_range(0, d->monster_descriptions.size()-1)];
+  n->name = m.name;
+  n->description = m.description;
+  n->color = m.color;
+  n->speed = m.speed.roll();
+  n->abilities = m.abilities;
+  n->hitpoints = m.hitpoints.roll();
+  n->damage = m.damage;
+  n->symbol = m.symbol;
+  n->rarity = m.rarity;
 }

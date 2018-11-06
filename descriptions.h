@@ -6,12 +6,15 @@
 # include <vector>
 # include <string>
 # include "dice.h"
+# include "npc.h"
 
 typedef struct dungeon dungeon_t;
 
 uint32_t parse_descriptions(dungeon_t *d);
 uint32_t print_descriptions(dungeon_t *d);
 uint32_t destroy_descriptions(dungeon_t *d);
+
+void init_monster(dungeon_t *d, npc *n);
 
 typedef enum object_type {
   objtype_no_type,
@@ -39,7 +42,7 @@ typedef enum object_type {
 extern const char object_symbol[];
 
 class monster_description {
- private:
+public:
   std::string name, description;
   char symbol;
   std::vector<uint32_t> color;
