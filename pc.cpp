@@ -1,6 +1,6 @@
-#include <stdlib.h>
-
-#include "string.h"
+#include <cstdlib>
+#include <ncurses.h>
+#include <cstring>
 
 #include "dungeon.h"
 #include "pc.h"
@@ -8,6 +8,7 @@
 #include "move.h"
 #include "path.h"
 #include "io.h"
+#include "object.h"
 
 uint32_t pc_is_alive(dungeon *d)
 {
@@ -29,9 +30,10 @@ void place_pc(dungeon *d)
 
 void config_pc(dungeon *d)
 {
+  static dice pc_dice(0, 1, 4);
+
   d->PC = new pc;
 
-  memset(d->PC, 0, sizeof (*d->PC));
   d->PC->symbol = '@';
 
   place_pc(d);
@@ -40,8 +42,11 @@ void config_pc(dungeon *d)
   d->PC->alive = 1;
   d->PC->sequence_number = 0;
   d->PC->kills[kill_direct] = d->PC->kills[kill_avenged] = 0;
+  d->PC->color.push_back(COLOR_WHITE);
+  d->PC->damage = &pc_dice;
+  d->PC->name = "Isabella Garcia-Shapiro";
 
-  d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = d->PC;
+  d->character_map[character_get_y(d->PC)][character_get_x(d->PC)] = d->PC;
 
   dijkstra(d);
   dijkstra_tunnel(d);
@@ -238,4 +243,11 @@ void pc_observe_terrain(pc *p, dungeon *d)
 int32_t is_illuminated(pc *p, int16_t y, int16_t x)
 {
   return p->visible[y][x];
+}
+
+void pc_see_object(character *the_pc, object *o)
+{
+  if (o) {
+    o->has_been_seen();
+  }
 }

@@ -82,3 +82,12 @@ Day 14: 10/29 10:00 - 11:00
 Day 15: 10/31 16:00 - 18:00
 	Parsing strings into usable info like dice object and ints
 	Updated changelog
+Day 14: 11/6 	14:00 -	18:00
+	Imported Professors code
+	Created Structs for new npcs
+	Changed generation of npcs
+	Added Color
+	Fixed bugs
+Day 15: 11/7	22:00 - 23:00
+	Fixed bugs
+	added rarity generation

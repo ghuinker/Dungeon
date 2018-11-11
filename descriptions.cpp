@@ -15,6 +15,7 @@
 #include "dice.h"
 #include "character.h"
 #include "utils.h"
+#include "event.h"
 
 #define MONSTER_FILE_SEMANTIC          "RLG327 MONSTER DESCRIPTION"
 #define MONSTER_FILE_VERSION           1U
@@ -94,7 +95,7 @@ static const struct {
   { 0, objtype_no_type }
 };
 
-extern const char object_symbol[] = {
+const char object_symbol[] = {
   '*', /* objtype_no_type */
   '|', /* objtype_WEAPON */
   ')', /* objtype_OFFHAND */
@@ -121,14 +122,14 @@ static inline void eat_whitespace(std::ifstream &f)
 {
   while (isspace(f.peek())) {
     f.get();
-  }
+  }  
 }
 
 static inline void eat_blankspace(std::ifstream &f)
 {
   while (isblank(f.peek())) {
     f.get();
-  }
+  }  
 }
 
 static uint32_t parse_name(std::ifstream &f,
@@ -1063,53 +1064,21 @@ std::ostream &operator<<(std::ostream &o, object_description &od)
   return od.print(o);
 }
 
-
-void init_monster(dungeon_t *d, npc *n){
-  monster_description &m = d->monster_descriptions[rand_range(0, d->monster_descriptions.size()-1)];
-  n->name = m.name;
-  n->description = m.description;
-  n->color = m.color;
-  n->speed = m.speed.roll();
-  n->abilities = m.abilities;
-  n->hitpoints = m.hitpoints.roll();
-  n->damage = m.damage;
-  n->symbol = m.symbol;
-  n->rarity = m.rarity;
-}
-
-void init_items(dungeon_t *d){
+npc *monster_description::generate_monster(dungeon *d)
+{
+  npc *n;
+  std::vector<monster_description> &v = d->monster_descriptions;
   uint32_t i;
-  pair_t p;
-  uint32_t room;
-  uint32_t num_items = rand_range(10, 20);
-  for(i=0; i<num_items; i++){
-    do {
-      room = rand_range(1, d->num_rooms - 1);
-      p[dim_y] = rand_range(d->rooms[room].position[dim_y],
-                            (d->rooms[room].position[dim_y] +
-                             d->rooms[room].size[dim_y] - 1));
-      p[dim_x] = rand_range(d->rooms[room].position[dim_x],
-                            (d->rooms[room].position[dim_x] +
-                             d->rooms[room].size[dim_x] - 1));
-    } while (d->character_map[p[dim_y]][p[dim_x]]);
 
-    object_description &m = d->object_descriptions[rand_range(0, d->object_descriptions.size()-1)];
-    item* t = new item;
-    t->name = m.name;
-    t->description = m.description;
-    t->type = m.type;
-    t->color = m.color;
-    t->hit = m.hit.roll();
-    t->damage = m.damage.roll();
-    t->dodge = m.dodge.roll();
-    t->defence = m.defence.roll();
-    t->weight = m.weight.roll();
-    t->speed = m.speed.roll();
-    t->attribute = m.attribute.roll();
-    t->value = m.value.roll();
-    t->artifact = m.artifact;
-    t->rarity = m.rarity;
+  while (!v[(i = (rand() % v.size()))].can_be_generated() ||
+         !v[i].pass_rarity_roll())
+    ;
 
-    d->item_map[p[dim_y]][p[dim_x]] = t;
-  }
+  monster_description &m = v[i];
+
+  n = new npc(d, m);
+
+  heap_insert(&d->events, new_event(d, event_character_turn, n, 0));
+
+  return n;
 }

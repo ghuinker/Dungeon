@@ -1,4 +1,4 @@
 All Code was written in C++, and all requirements from previous homework
-assignments are met (except for code written in C). All fields are present
-within monster and no fields are duplicated. The monsters are then printed from
-parsed data. 
+assignments are met (except for code written in C). All monsters generated are
+from descriptions. All items generated are from descriptions. Items and monsters
+have color.

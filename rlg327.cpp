@@ -10,7 +10,7 @@
 #include "npc.h"
 #include "move.h"
 #include "io.h"
-#include "descriptions.h"
+#include "object.h"
 
 const char *victory =
   "\n                                       o\n"
@@ -69,7 +69,7 @@ void usage(char *name)
   fprintf(stderr,
           "Usage: %s [-r|--rand <seed>] [-l|--load [<file>]]\n"
           "          [-s|--save [<file>]] [-i|--image <pgm file>]\n"
-          "          [-n|--nummon <count>]",
+          "          [-n|--nummon <count>] [-o|--objcount <oject count>]\n",
           name);
 
   exit(-1);
@@ -87,22 +87,19 @@ int main(int argc, char *argv[])
   char *load_file;
   char *pgm_file;
 
-
-  /* Quiet a false positive from valgrind. */
-  memset(&d, 0, sizeof (d));
-
   /* Default behavior: Seed with the time, generate a new dungeon, *
    * and don't write to disk.                                      */
   do_load = do_save = do_image = do_save_seed = do_save_image = 0;
   do_seed = 1;
   save_file = load_file = NULL;
   d.max_monsters = MAX_MONSTERS;
+  d.max_objects = MAX_OBJECTS;
 
   /* The project spec requires '--load' and '--save'.  It's common  *
    * to have short and long forms of most switches (assuming you    *
    * don't run out of letters).  For now, we've got plenty.  Long   *
    * forms use whole words and take two dashes.  Short forms use an *
-   * abbreviation after a single dash.  We'll add '--rand' (to     *
+    * abbreviation after a single dash.  We'll add '--rand' (to     *
    * specify a random seed), which will take an argument of it's    *
    * own, and we'll add short forms for all three commands, '-l',   *
    * '-s', and '-r', respectively.  We're also going to allow an    *
@@ -111,8 +108,8 @@ int main(int argc, char *argv[])
    * And the final switch, '--image', allows me to create a dungeon *
    * from a PGM image, so that I was able to create those more      *
    * interesting test dungeons for you.                             */
-
-  if (argc > 1) {
+ 
+ if (argc > 1) {
     for (i = 1, long_arg = 0; i < argc; i++, long_arg = 0) {
       if (argv[i][0] == '-') { /* All switches start with a dash */
         if (argv[i][1] == '-') {
@@ -183,6 +180,14 @@ int main(int argc, char *argv[])
             pgm_file = argv[++i];
           }
           break;
+        case 'o':
+          if ((!long_arg && argv[i][2]) ||
+              (long_arg && strcmp(argv[i], "-objcount")) ||
+              argc < ++i + 1 /* No more arguments */ ||
+              !sscanf(argv[i], "%hu", &d.max_objects)) {
+            usage(argv[0]);
+          }
+          break;
         default:
           usage(argv[0]);
         }
@@ -201,6 +206,7 @@ int main(int argc, char *argv[])
 
   srand(seed);
 
+  parse_descriptions(&d);
   io_init_terminal();
   init_dungeon(&d);
 
@@ -214,12 +220,10 @@ int main(int argc, char *argv[])
 
   /* Ignoring PC position in saved dungeons.  Not a bug. */
   config_pc(&d);
-
-  //Generate Monsters Based on Descriptions
-  parse_descriptions(&d);
   gen_monsters(&d);
-  init_items(&d);
-
+  gen_objects(&d);
+  pc_observe_terrain(d.PC, &d);
+  
   io_display(&d);
   if (!do_load && !do_image) {
     io_queue_message("Seed is %u.", seed);
@@ -233,7 +237,7 @@ int main(int argc, char *argv[])
 
   if (do_save) {
     if (do_save_seed) {
-      /* 10 bytes for number, please dot, extention and null terminator. */
+       /* 10 bytes for number, please dot, extention and null terminator. */
       save_file = (char *) malloc(18);
       sprintf(save_file, "%ld.rlg327", seed);
     }
@@ -269,6 +273,7 @@ int main(int argc, char *argv[])
   }
 
   delete_dungeon(&d);
+  destroy_descriptions(&d);
 
   return 0;
 }
