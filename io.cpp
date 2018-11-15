@@ -701,9 +701,8 @@ uint32_t io_teleport_pc(dungeon *d)
 }
 
 
-void print_eq_slots(dungeon *d){
+void print_eq_slots(dungeon *d, std::string title){
   uint8_t i, j;
-  std::string title = "Equipment";
   for(i=10; i<10+title.length(); i++){
     mvaddch(4, i, title[i-10]);
   }
@@ -740,7 +739,7 @@ void eq_slots(dungeon *d){
   char key;
   bool exited = false;
   while(!exited){
-    print_eq_slots(d);
+    print_eq_slots(d, "Equipment");
     switch (key = getch()) {
     case 'e':
     case 27:
@@ -823,9 +822,7 @@ void delete_item(dungeon *d){
   }
   io_display(d);
 }
-/*
 
-*/
 void wear_item(dungeon *d){
   char key;
   bool exited = false;
@@ -881,6 +878,7 @@ void wear_item(dungeon *d){
           break;
         }
         object* into_equipment = d->PC->inventory[index];
+        d->PC->inventory[index] = NULL;
         if(part == LRING)
           if(d->PC->equipment[part] == NULL)
             part++;
@@ -889,9 +887,51 @@ void wear_item(dungeon *d){
           d->PC->inventory[index] = d->PC->equipment[part];
         }
         d->PC->equipment[part] = into_equipment;
+
       }
     }
     case 'w':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
+}
+
+void take_off_item(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_eq_slots(d, "Equipment");
+    switch (key = getch()) {
+    case 'a':
+    case 'b':
+    case 'c':
+    case 'd':
+    case 'e':
+    case 'f':
+    case 'g':
+    case 'h':
+    case 'i':
+    case 'j':
+    case 'k':
+    case 'l':
+      if(d->PC->equipment[(uint8_t) key - 'a'] != NULL){
+        bool un_equipped = false;
+        for(int i=0; i<10; i++){
+          if(d->PC->inventory[i] == NULL){
+            d->PC->inventory[i] = d->PC->equipment[(uint8_t) key - 'a'];
+            d->PC->equipment[(uint8_t) key - 'a'] = NULL;
+            un_equipped = true;
+            break;
+          }
+        }
+        if(!un_equipped){
+          io_queue_message("No empty spots left in inventory.");
+        }
+      }
+    case 't':
     case 27:
       exited = true;
       break;
@@ -1210,6 +1250,7 @@ void io_handle_input(dungeon *d)
       break;
     case 't':
       //6take off an item prompts user for a carry slot
+      take_off_item(d);
       break;
     case 'd':
       //3Drop item
