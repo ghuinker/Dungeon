@@ -682,7 +682,7 @@ uint32_t io_teleport_pc(dungeon *d)
 
   if (charpair(dest) && charpair(dest) != d->PC) {
     io_queue_message("Teleport failed.  Destination occupied.");
-  } else {  
+  } else {
     d->character_map[d->PC->position[dim_y]][d->PC->position[dim_x]] = NULL;
     d->character_map[dest[dim_y]][dest[dim_x]] = d->PC;
 
@@ -697,6 +697,50 @@ uint32_t io_teleport_pc(dungeon *d)
   io_display(d);
 
   return 0;
+}
+
+
+void print_eq_slots(dungeon *d){
+
+}
+
+void print_carry_slots(dungeon *d){
+  uint8_t i, j;
+  std::string title = "Inventory";
+  for(i=10; i<10+title.length(); i++){
+    mvaddch(4, i, title[i-10]);
+  }
+  std::string item;
+  for(i=0; i<10; i++){
+    mvaddch(i + 5, 10, i + '0');
+    if(d->PC->inventory.size()>0)
+      if(d->PC->inventory.size()-1 >= i){
+        item = d->PC->inventory[i].get_name();
+        for(j=0; j<item.length(); j++){
+          mvaddch(i + 5, 12 + j, item[j]);
+        }
+      }
+
+  }
+}
+
+void eq_slots(dungeon *d){
+
+}
+
+void carry_slots(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_carry_slots(d);
+    switch (key = getch()) {
+      case 'i':
+      case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
 }
 
 /* Adjectives to describe our monsters */
@@ -732,6 +776,8 @@ static const char *adjectives[] = {
   "Eine liebliche "  /* For our Deutch */
   /* And there's one special case (see below) */
 };
+
+
 
 static void io_scroll_monster_list(char (*s)[60], uint32_t count)
 {
@@ -967,9 +1013,6 @@ void io_handle_input(dungeon *d)
       io_display(d);
       fail_code = 1;
       break;
-    case 'L':
-      fail_code = 1;
-      break;
     case 'g':
       /* Teleport the PC to a random place in the dungeon.              */
       io_teleport_pc(d);
@@ -1004,6 +1047,32 @@ void io_handle_input(dungeon *d)
       io_queue_message("Have fun!  And happy printing!");
       fail_code = 0;
       break;
+    case 'w':
+    //5wear an item prompts the user for a carry slot
+    break;
+    case 't':
+    //6take off an item prompts user for a carry slot
+    break;
+    case 'd':
+    //3Drop item
+    break;
+    case 'x':
+    //4item is permantly removed from the game
+    break;
+    case 'i':
+    //1list Inventory
+    carry_slots(d);
+    break;
+    case 'e':
+    //2list pc equipment
+    eq_slots(d);
+    break;
+    case 'I':
+    //7inspect an item
+    break;
+    case 'L':
+    //8Look at Monster
+    break;
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *
