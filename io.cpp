@@ -795,6 +795,35 @@ void drop_item(dungeon *d){
   io_display(d);
 }
 
+void delete_item(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_carry_slots(d, "Destroy Object");
+    switch (key = getch()) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      if(d->PC->inventory[(uint8_t) key - '0'] != NULL){
+        delete d->PC->inventory[(uint8_t) key - '0'] ;
+        d->PC->inventory[(uint8_t) key - '0'] = NULL;
+      }
+    case 'x':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
+}
+
 /* Adjectives to describe our monsters */
 static const char *adjectives[] = {
   "A menacing ",
@@ -1111,6 +1140,7 @@ void io_handle_input(dungeon *d)
       break;
     case 'x':
       //4item is permantly removed from the game
+      delete_item(d);
       break;
     case 'i':
       //1list Inventory
