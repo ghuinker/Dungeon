@@ -1,4 +1,3 @@
 All Code was written in C++, and all requirements from previous homework
-assignments are met (except for code written in C). All monsters generated are
-from descriptions. All items generated are from descriptions. Items and monsters
-have color.
+assignments are met (except for code written in C). PC has the menus to manage
+inventory and equipment.

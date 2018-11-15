@@ -91,3 +91,13 @@ Day 14: 11/6 	14:00 -	18:00
 Day 15: 11/7	22:00 - 23:00
 	Fixed bugs
 	added rarity generation
+Day 16: 11/15	17:00	-	00:00
+	Imported professors code
+	Added list inventory
+	added equipment
+	added drop Item
+	added destroy item
+	added wear item
+	added take off item
+	added inspect item
+	Updated README and Changelog
