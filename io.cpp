@@ -711,7 +711,7 @@ void print_eq_slots(dungeon *d){
   for(i=0; i<12; i++){
     mvaddch(i + 5, 10, i + 'a');
     if(d->PC->equipment[i] != NULL){
-      item = *(d->PC->equipment[i])->get_name();
+      item = d->PC->equipment[i]->get_name();
       for(j=0; j<item.length(); j++){
         mvaddch(i + 5, 12 + j, item[j]);
       }
@@ -816,6 +816,82 @@ void delete_item(dungeon *d){
         d->PC->inventory[(uint8_t) key - '0'] = NULL;
       }
     case 'x':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
+}
+/*
+
+*/
+void wear_item(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_carry_slots(d, "Wear Object");
+    switch (key = getch()) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':{
+      uint8_t index = (uint8_t) key - '0';
+      if(d->PC->inventory[index] != NULL){
+        uint8_t part;
+        switch(d->PC->inventory[index]->get_type()){
+          case objtype_WEAPON:
+          part = WEAPON;
+          break;
+          case objtype_OFFHAND:
+          part = OFFHAND;
+          break;
+          case objtype_RANGED:
+          part = RANGED;
+          break;
+          case objtype_LIGHT:
+          part = LIGHT;
+          break;
+          case objtype_ARMOR:
+          part = ARMOR;
+          break;
+          case objtype_HELMET:
+          part = HELMET;
+          break;
+          case objtype_CLOAK:
+          part = CLOAK;
+          break;
+          case objtype_GLOVES:
+          part = GLOVES;
+          break;
+          case objtype_BOOTS:
+          part = BOOTS;
+          break;
+          case objtype_AMULET:
+          part = AMULET;
+          break;
+          case objtype_RING:
+          part = LRING;
+          break;
+        }
+        object* into_equipment = d->PC->inventory[index];
+        if(part == LRING)
+          if(d->PC->equipment[part] == NULL)
+            part++;
+
+        if(d->PC->equipment[part] != NULL){
+          d->PC->inventory[index] = d->PC->equipment[part];
+        }
+        d->PC->equipment[part] = into_equipment;
+      }
+    }
+    case 'w':
     case 27:
       exited = true;
       break;
@@ -1130,6 +1206,7 @@ void io_handle_input(dungeon *d)
       break;
     case 'w':
       //5wear an item prompts the user for a carry slot
+      wear_item(d);
       break;
     case 't':
       //6take off an item prompts user for a carry slot
