@@ -940,6 +940,54 @@ void take_off_item(dungeon *d){
   io_display(d);
 }
 
+void inspect_item(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_carry_slots(d, "Inspect Item");
+    switch (key = getch()) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      if(d->PC->inventory[(uint8_t) key - '0'] != NULL){
+        clear();
+        std::string description = d->PC->inventory[(uint8_t) key - '0']->get_description();
+        std::string title = "****Description****";
+        uint8_t i, w, h;
+        for(i=0; i<title.length(); i++){
+          mvaddch(2, 5 + i, title[i]);
+        }
+        w=5; h=2;
+        for(i=0; i<description.length(); i++){
+          if(description[i] == '\n'){
+            w=5;
+            h++;
+            i++;
+            continue;
+          }
+          mvaddch(h, w++, description[i]);
+        }
+        getch();
+        clear();
+      }
+      break;
+    case 'I':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+
+  io_display(d);
+}
+
 /* Adjectives to describe our monsters */
 static const char *adjectives[] = {
   "A menacing ",
@@ -1270,6 +1318,7 @@ void io_handle_input(dungeon *d)
       break;
     case 'I':
       //7inspect an item
+      inspect_item(d);
       break;
     case 'L':
       //8Look at Monster
