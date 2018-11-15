@@ -330,9 +330,12 @@ uint32_t move_pc(dungeon *d, uint32_t dir)
     dijkstra_tunnel(d);
     object* obj = d->objmap[d->PC->position[dim_y]][d->PC->position[dim_x]];
     if(obj != nullptr){
-      if(d->PC->inventory.size() < 10){
-        d->PC->inventory.push_back(*obj);
-        d->objmap[d->PC->position[dim_y]][d->PC->position[dim_x]] = NULL;
+      for(uint8_t i=0; i<10; i++){
+        if(d->PC->inventory[i] == NULL){
+          d->PC->inventory[i] = obj;
+          d->objmap[d->PC->position[dim_y]][d->PC->position[dim_x]] = NULL;
+          break;
+        }
       }
     }
     return 0;

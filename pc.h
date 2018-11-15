@@ -16,7 +16,7 @@ class pc : public character {
   ~pc() {}
   terrain_type known_terrain[DUNGEON_Y][DUNGEON_X];
   uint8_t visible[DUNGEON_Y][DUNGEON_X];
-  std::vector<object> inventory;
+  object* inventory[10];
   object* equipment[12];
 };
 

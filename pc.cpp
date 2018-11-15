@@ -36,6 +36,9 @@ void config_pc(dungeon *d)
   for(uint8_t i=0; i<12; i++){
     d->PC->equipment[i] = NULL;
   }
+  for(uint8_t i=0; i<10; i++){
+    d->PC->inventory[i] = NULL;
+  }
 
   d->PC->symbol = '@';
 

@@ -12,6 +12,7 @@
 #include "object.h"
 #include "npc.h"
 
+
 /* Same ugly hack we did in path.c */
 static dungeon *thedungeon;
 
@@ -710,7 +711,7 @@ void print_eq_slots(dungeon *d){
   for(i=0; i<12; i++){
     mvaddch(i + 5, 10, i + 'a');
     if(d->PC->equipment[i] != NULL){
-      item = d->PC->inventory[i].get_name();
+      item = *(d->PC->equipment[i])->get_name();
       for(j=0; j<item.length(); j++){
         mvaddch(i + 5, 12 + j, item[j]);
       }
@@ -718,22 +719,20 @@ void print_eq_slots(dungeon *d){
   }
 }
 
-void print_carry_slots(dungeon *d){
+void print_carry_slots(dungeon *d, std::string title){
   uint8_t i, j;
-  std::string title = "Inventory";
   for(i=10; i<10+title.length(); i++){
     mvaddch(4, i, title[i-10]);
   }
   std::string item;
   for(i=0; i<10; i++){
     mvaddch(i + 5, 10, i + '0');
-    if(d->PC->inventory.size()>0)
-      if(d->PC->inventory.size()-1 >= i){
-        item = d->PC->inventory[i].get_name();
-        for(j=0; j<item.length(); j++){
-          mvaddch(i + 5, 12 + j, item[j]);
-        }
+    if(d->PC->inventory[i] != NULL){
+      item = d->PC->inventory[i]->get_name();
+      for(j=0; j<item.length(); j++){
+        mvaddch(i + 5, 12 + j, item[j]);
       }
+    }
   }
 }
 
@@ -756,9 +755,38 @@ void carry_slots(dungeon *d){
   char key;
   bool exited = false;
   while(!exited){
-    print_carry_slots(d);
+    print_carry_slots(d, "Inventory");
     switch (key = getch()) {
     case 'i':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
+}
+
+void drop_item(dungeon *d){
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_carry_slots(d, "Drop from Inventory");
+    switch (key = getch()) {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      if(d->PC->inventory[(uint8_t) key - '0'] != NULL){
+        d->objmap[d->PC->position[dim_y]][d->PC->position[dim_x]] = d->PC->inventory[(uint8_t) key - '0'];
+        d->PC->inventory[(uint8_t) key - '0'] = NULL;
+      }
+    case 'd':
     case 27:
       exited = true;
       break;
@@ -1079,6 +1107,7 @@ void io_handle_input(dungeon *d)
       break;
     case 'd':
       //3Drop item
+      drop_item(d);
       break;
     case 'x':
       //4item is permantly removed from the game
