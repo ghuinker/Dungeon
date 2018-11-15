@@ -193,40 +193,40 @@ static void io_redisplay_visible_monsters(dungeon *d)
         attron(A_BOLD);
       }
       if (d->character_map[d->PC->position[dim_y] + pos[dim_y]]
-                          [d->PC->position[dim_x] + pos[dim_x]] &&
+	  [d->PC->position[dim_x] + pos[dim_x]] &&
           can_see(d, d->PC->position,
                   d->character_map[d->PC->position[dim_y] + pos[dim_y]]
-                                  [d->PC->position[dim_x] +
-                                   pos[dim_x]]->position, 1, 0)) {
+		  [d->PC->position[dim_x] +
+		   pos[dim_x]]->position, 1, 0)) {
         attron(COLOR_PAIR((color = d->character_map[d->PC->position[dim_y] +
                                                     pos[dim_y]]
-                                                   [d->PC->position[dim_x] +
-                                                    pos[dim_x]]->get_color())));
+			   [d->PC->position[dim_x] +
+			    pos[dim_x]]->get_color())));
         mvaddch(d->PC->position[dim_y] + pos[dim_y] + 1,
                 d->PC->position[dim_x] + pos[dim_x],
                 character_get_symbol(d->character_map[d->PC->position[dim_y] +
                                                       pos[dim_y]]
-                                                     [d->PC->position[dim_x] +
-                                                      pos[dim_x]]));
+				     [d->PC->position[dim_x] +
+				      pos[dim_x]]));
         attroff(COLOR_PAIR(color));
       } else if (d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                          [d->PC->position[dim_x] + pos[dim_x]] &&
+		 [d->PC->position[dim_x] + pos[dim_x]] &&
                  (can_see(d, d->PC->position,
                           d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                                   [d->PC->position[dim_x] +
-                                    pos[dim_x]]->get_position(), 1, 0) ||
-                 d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                          [d->PC->position[dim_x] + pos[dim_x]]->have_seen())) {
+			  [d->PC->position[dim_x] +
+			   pos[dim_x]]->get_position(), 1, 0) ||
+		  d->objmap[d->PC->position[dim_y] + pos[dim_y]]
+		  [d->PC->position[dim_x] + pos[dim_x]]->have_seen())) {
         attron(COLOR_PAIR(d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                                   [d->PC->position[dim_x] +
-                                    pos[dim_x]]->get_color()));
+			  [d->PC->position[dim_x] +
+			   pos[dim_x]]->get_color()));
         mvaddch(d->PC->position[dim_y] + pos[dim_y] + 1,
                 d->PC->position[dim_x] + pos[dim_x],
                 d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                         [d->PC->position[dim_x] + pos[dim_x]]->get_symbol());
+		[d->PC->position[dim_x] + pos[dim_x]]->get_symbol());
         attroff(COLOR_PAIR(d->objmap[d->PC->position[dim_y] + pos[dim_y]]
-                                    [d->PC->position[dim_x] +
-                                     pos[dim_x]]->get_color()));
+			   [d->PC->position[dim_x] +
+			    pos[dim_x]]->get_color()));
       } else {
         switch (pc_learned_terrain(d->PC,
                                    d->PC->position[dim_y] + pos[dim_y],
@@ -260,8 +260,8 @@ static void io_redisplay_visible_monsters(dungeon *d)
                   d->PC->position[dim_x] + pos[dim_x], '>');
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
           mvaddch(d->PC->position[dim_y] + pos[dim_y] + 1,
                   d->PC->position[dim_x] + pos[dim_x], '0');
         }
@@ -279,9 +279,9 @@ static int compare_monster_distance(const void *v1, const void *v2)
   const character *const *c2 = (const character *const *) v2;
 
   return (thedungeon->pc_distance[(*c1)->position[dim_y]]
-                                 [(*c1)->position[dim_x]] -
+	  [(*c1)->position[dim_x]] -
           thedungeon->pc_distance[(*c2)->position[dim_y]]
-                                 [(*c2)->position[dim_x]]);
+	  [(*c2)->position[dim_x]]);
 }
 
 static character *io_nearest_visible_monster(dungeon *d)
@@ -335,30 +335,30 @@ void io_display(dungeon *d)
         attron(A_BOLD);
       }
       if (d->character_map[pos[dim_y]]
-                          [pos[dim_x]] &&
+	  [pos[dim_x]] &&
           can_see(d,
                   character_get_pos(d->PC),
                   character_get_pos(d->character_map[pos[dim_y]]
-                                                    [pos[dim_x]]), 1, 0)) {
+				    [pos[dim_x]]), 1, 0)) {
         visible_monsters++;
         attron(COLOR_PAIR((color = d->character_map[pos[dim_y]]
-                                                   [pos[dim_x]]->get_color())));
+			   [pos[dim_x]]->get_color())));
         mvaddch(pos[dim_y] + 1, pos[dim_x],
                 character_get_symbol(d->character_map[pos[dim_y]]
-                                                     [pos[dim_x]]));
+				     [pos[dim_x]]));
         attroff(COLOR_PAIR(color));
       } else if (d->objmap[pos[dim_y]]
-                          [pos[dim_x]] &&
+		 [pos[dim_x]] &&
                  (d->objmap[pos[dim_y]]
-                           [pos[dim_x]]->have_seen() ||
+		  [pos[dim_x]]->have_seen() ||
                   can_see(d, character_get_pos(d->PC), pos, 1, 0))) {
         attron(COLOR_PAIR(d->objmap[pos[dim_y]]
-                                   [pos[dim_x]]->get_color()));
+			  [pos[dim_x]]->get_color()));
         mvaddch(pos[dim_y] + 1, pos[dim_x],
                 d->objmap[pos[dim_y]]
-                         [pos[dim_x]]->get_symbol());
+		[pos[dim_x]]->get_symbol());
         attroff(COLOR_PAIR(d->objmap[pos[dim_y]]
-                                    [pos[dim_x]]->get_color()));
+			   [pos[dim_x]]->get_color()));
       } else {
         switch (pc_learned_terrain(d->PC,
                                    pos[dim_y],
@@ -385,8 +385,8 @@ void io_display(dungeon *d)
           mvaddch(pos[dim_y] + 1, pos[dim_x], '>');
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
           mvaddch(pos[dim_y] + 1, pos[dim_x], '0');
         }
       }
@@ -441,7 +441,7 @@ static void io_redisplay_non_terrain(dungeon *d, pair_t cursor)
         mvaddch(pos[dim_y] + 1, pos[dim_x], '*');
       } else if (d->character_map[pos[dim_y]][pos[dim_x]]) {
         attron(COLOR_PAIR((color = d->character_map[pos[dim_y]]
-                                                   [pos[dim_x]]->get_color())));
+			   [pos[dim_x]]->get_color())));
         mvaddch(pos[dim_y] + 1, pos[dim_x],
                 character_get_symbol(d->character_map[pos[dim_y]][pos[dim_x]]));
         attroff(COLOR_PAIR(color));
@@ -498,8 +498,8 @@ void io_display_no_fog(dungeon *d)
           mvaddch(y + 1, x, '>');
           break;
         default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+	  /* Use zero as an error symbol, since it stands out somewhat, and it's *
+	   * not otherwise used.                                                 */
           mvaddch(y + 1, x, '0');
         }
       }
@@ -597,8 +597,8 @@ uint32_t io_teleport_pc(dungeon *d)
       mvaddch(dest[dim_y] + 1, dest[dim_x], '>');
       break;
     default:
- /* Use zero as an error symbol, since it stands out somewhat, and it's *
-  * not otherwise used.                                                 */
+      /* Use zero as an error symbol, since it stands out somewhat, and it's *
+       * not otherwise used.                                                 */
       mvaddch(dest[dim_y] + 1, dest[dim_x], '0');
     }
     switch ((c = getch())) {
@@ -701,7 +701,21 @@ uint32_t io_teleport_pc(dungeon *d)
 
 
 void print_eq_slots(dungeon *d){
-
+  uint8_t i, j;
+  std::string title = "Equipment";
+  for(i=10; i<10+title.length(); i++){
+    mvaddch(4, i, title[i-10]);
+  }
+  std::string item;
+  for(i=0; i<12; i++){
+    mvaddch(i + 5, 10, i + 'a');
+    if(d->PC->equipment[i] != NULL){
+      item = d->PC->inventory[i].get_name();
+      for(j=0; j<item.length(); j++){
+        mvaddch(i + 5, 12 + j, item[j]);
+      }
+    }
+  }
 }
 
 void print_carry_slots(dungeon *d){
@@ -720,12 +734,22 @@ void print_carry_slots(dungeon *d){
           mvaddch(i + 5, 12 + j, item[j]);
         }
       }
-
   }
 }
 
 void eq_slots(dungeon *d){
-
+  char key;
+  bool exited = false;
+  while(!exited){
+    print_eq_slots(d);
+    switch (key = getch()) {
+    case 'e':
+    case 27:
+      exited = true;
+      break;
+    }
+  }
+  io_display(d);
 }
 
 void carry_slots(dungeon *d){
@@ -734,8 +758,8 @@ void carry_slots(dungeon *d){
   while(!exited){
     print_carry_slots(d);
     switch (key = getch()) {
-      case 'i':
-      case 27:
+    case 'i':
+    case 27:
       exited = true;
       break;
     }
@@ -1048,31 +1072,31 @@ void io_handle_input(dungeon *d)
       fail_code = 0;
       break;
     case 'w':
-    //5wear an item prompts the user for a carry slot
-    break;
+      //5wear an item prompts the user for a carry slot
+      break;
     case 't':
-    //6take off an item prompts user for a carry slot
-    break;
+      //6take off an item prompts user for a carry slot
+      break;
     case 'd':
-    //3Drop item
-    break;
+      //3Drop item
+      break;
     case 'x':
-    //4item is permantly removed from the game
-    break;
+      //4item is permantly removed from the game
+      break;
     case 'i':
-    //1list Inventory
-    carry_slots(d);
-    break;
+      //1list Inventory
+      carry_slots(d);
+      break;
     case 'e':
-    //2list pc equipment
-    eq_slots(d);
-    break;
+      //2list pc equipment
+      eq_slots(d);
+      break;
     case 'I':
-    //7inspect an item
-    break;
+      //7inspect an item
+      break;
     case 'L':
-    //8Look at Monster
-    break;
+      //8Look at Monster
+      break;
     default:
       /* Also not in the spec.  It's not always easy to figure out what *
        * key code corresponds with a given keystroke.  Print out any    *

@@ -33,6 +33,9 @@ void config_pc(dungeon *d)
   static dice pc_dice(0, 1, 4);
 
   d->PC = new pc;
+  for(uint8_t i=0; i<12; i++){
+    d->PC->equipment[i] = NULL;
+  }
 
   d->PC->symbol = '@';
 
@@ -237,7 +240,7 @@ void pc_observe_terrain(pc *p, dungeon *d)
     can_see(d, p->position, where, 1, 1);
     where[dim_y] = y_max;
     can_see(d, p->position, where, 1, 1);
-  }       
+  }
 }
 
 int32_t is_illuminated(pc *p, int16_t y, int16_t x)

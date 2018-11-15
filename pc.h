@@ -8,12 +8,16 @@
 # include "dungeon.h"
 # include "object.h"
 
+enum EQ {WEAPON, OFFHAND, RANGED, ARMOR, HELMET, CLOAK, GLOVES,
+BOOTS, AMULET, LIGHT, LRING, RRING};
+
 class pc : public character {
  public:
   ~pc() {}
   terrain_type known_terrain[DUNGEON_Y][DUNGEON_X];
   uint8_t visible[DUNGEON_Y][DUNGEON_X];
   std::vector<object> inventory;
+  object* equipment[12];
 };
 
 void pc_delete(pc *pc);
